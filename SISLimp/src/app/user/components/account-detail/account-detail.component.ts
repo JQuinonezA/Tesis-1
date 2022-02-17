@@ -17,7 +17,7 @@ const CITYCAT = 'CITYCAT'
 export class AccountDetailComponent implements OnInit {
   dropprovince: SelectItem[] = [];
   dropcity: SelectItem[] = [];
-  dataUser: UserGeneralModel = new UserGeneralModel();
+  dataUser: UserGeneralModel;
   formUser: FormGroup = new FormGroup({});
   editable: boolean = false;
   loginUser: LoginUser = new LoginUser();
@@ -28,6 +28,7 @@ export class AccountDetailComponent implements OnInit {
     private catalogueService: CataloguesService,
     private messageService: MessageService,
   ) {
+    this.dataUser = new UserGeneralModel();
     this.createForm();
     this.onEdit();
   }
@@ -63,7 +64,7 @@ export class AccountDetailComponent implements OnInit {
       email: [this.dataUser.email, Validators.required],
       password: ['', Validators.required],
       confirmpassword: ['', Validators.required],
-      province: ['', Validators.required],
+      province: [this.dataUser.province, Validators.required],
       city: ['', Validators.required],
     },{ validator: this.MustMatch("password", "confirmpassword") });
   }

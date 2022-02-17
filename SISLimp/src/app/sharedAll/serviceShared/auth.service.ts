@@ -6,7 +6,7 @@ import { User } from '../models/user.interfa';
 import { catchError, map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
-import { UserGeneralModel } from '../models/usergeneral.model';
+import { ErrorLogin, UserGeneralModel } from '../models/usergeneral.model';
 
 const helper = new JwtHelperService();
 @Injectable({
@@ -25,12 +25,12 @@ export class AuthService {
 
   login(authData: User): Observable<UserGeneralModel> {
     return this.http.post<any>(`${environment.API_URL}/auth/login`, authData).pipe(map(res => {
-      // console.log('REST LOGIN', res);
-      this.saveToken(res.token, res.loginusercol, res.codeuser, res.username );
-      
-      this.userLogged.next(true);
-      return res
-
+      //console.log('REST LOGIN', res);
+      if (res.hasOwnProperty('codeuser')) {
+        this.saveToken(res.token, res.loginusercol, res.codeuser, res.username);
+        this.userLogged.next(true);
+        return res
+      }
     }),
       catchError(error => this.handleError(error))
     );
@@ -48,7 +48,7 @@ export class AuthService {
     this.codeUser = Number(localStorage.getItem('code'));
     this.username = localStorage.getItem('username');
     console.log('isExpired', isExpired);
-    if(isExpired){
+    if (isExpired) {
       this.logOut();
     } else {
       this.userLogged.next(true);
@@ -59,7 +59,7 @@ export class AuthService {
     localStorage.setItem('token', token);
     localStorage.setItem('role', role);
     localStorage.setItem('username', username);
-    localStorage.setItem('code', code+"");
+    localStorage.setItem('code', code + "");
   }
   private handleError(error): Observable<never> {
 

@@ -1,10 +1,86 @@
-<header class="site-header inicio mb-5">
-    <div class="contenedor contenido-header">
-        <h1 style="font-style: italic;">Servicios</h1>
+<div class="breadcrumbs" data-aos="fade-in">
+    <div class="container">
+        <h2>Servicios</h2>
+        <p>Puedes solicitar tus servicios aqui.</p>
     </div>
-</header>
+</div>
+<br>
+<section id="courses" class="courses">
+    <div class="container" data-aos="fade-up">
+        <div class="row">
+            <div class="col-lg-8 col-md-8 d-flex align-items-stretch">
+                <div class="row" data-aos="zoom-in" data-aos-delay="100">
+                    <ng-container *ngFor="let item of service">
+                        <div class="col-lg-6 col-md-6 d-flex align-items-stretch mb-5">
+                            <div class="course-item">
+                                <img src="{{item.img}}" width="80%" class="img-fluid" alt="...">
+                                <div class="course-content">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h4 (click)="addservice(item.idProd)">{{item.serviceName}} <i class="fa fa-plus-circle"></i> </h4>
+                                        <p class="price">$9</p>
+                                    </div>
+                                    <h3><a href="course-details.html">{{item.serviceName}}</a></h3>
+                                    <p>{{item.serviceDesq}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 ">
+                <div class="card mb-5 border-4 rounded-3 shadow-lg text-black bg-secondary">
+                    <div class="card-header">
+                        <h6 class="card-header text-white">Cesto de productos</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="custom-scrollbar-css">
+                            <ul class="list-group shadow">
+                                <ng-container *ngFor="let item of cart">
+                                    <li class="list-group-item">
+                                        <div class="media align-items-lg-center flex-column flex-lg-row p-3">
+                                            <div class="media-body order-2 order-lg-1">
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                        <h5 class="mt-0 font-weight-bold mb-2">{{item.serviceName}}
+                                                        </h5>
+                                                    </div>
+                                                    <div class="col-4 text-right">
+                                                        <span class="badge rounded-pill bg-primary text-white"
+                                                            style="font-size: 11px;">
+                                                            Cantidad: <b>{{item.cantidad}}</b>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <p class="font-italic text-muted mb-0 small">{{item.serviceDesq}}
+                                                </p>
+                                                <div class="d-flex align-items-center justify-content-between mt-1">
+                                                    <a class="btn btn-danger btn-block p-2 shadow rounded-pill shadow-lg"
+                                                        style="width: 70px;" (click)="quitservice(item.idProd)"><i
+                                                            class="fas fa-trash-alt"></i>
+                                                        <span class="font-weight-bold">Eliminar</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ng-container>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-center">
+                        <a class="btn btn-success btn-block p-2 shadow rounded-pill shadow-lg"
+                            style="width: 60%; background-color: #1E65AE;">
+                            <i class="fa fa-check-circle mr-2"></i>
+                            <span class="font-weight-bold">Confirmar</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<div class="container-fluid">
+    </div>
+</section>
+<!-- <div class="container-fluid">
     <section>
         <div class="mb-5 mt-5">
             <img style="width: 100%;" src="../../../../assets/picturespage/products.png" alt="">
@@ -18,8 +94,6 @@
                     <ng-container *ngFor="let item of service">
                         <div class="col-6 col-sm-5">
                             <div class="card mb-5 border-0 rounded-3 shadow-lg text-center">
-                                <!-- <img src="../../../../assets/picturespage/itemsproductos.png" alt=""
-                                    class="rounded mx-auto d-block imgpro card-img-top"> -->
                                     <img src="{{item.img}}" class="rounded mx-auto d-block imgpro card-img-top" />
                                 <div class="card-body">
                                     <h6 class="card-title mt-0 font-weight-bold mb-2">{{item.serviceName}}</h6>
@@ -87,4 +161,4 @@
             <div class="col-1"></div>
         </div>
     </section>
-</div>
+</div> -->

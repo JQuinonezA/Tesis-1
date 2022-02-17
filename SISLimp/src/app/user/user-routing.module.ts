@@ -13,7 +13,7 @@ const routes: Routes = [
       {path: 'bouyhysto', component: BuyHistoryComponent},
       {path: 'orders', component: OrdersComponent},
       {path: 'out', component: OutComponent},
-      { path: '**', redirectTo: 'accountdetail' },
+      { path: '**', redirectTo: 'bouyhysto' },
       
     ]
   }

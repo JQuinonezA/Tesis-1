@@ -34,11 +34,11 @@
                         </td>
                         <td NOWRAP>
                             <span class="p-column-title">Fecha inicio</span>
-                            {{dataFrom.dateService | date:'dd/mm/yyyy'}}
+                            {{dataFrom.dateService | date:'dd/MM/yyyy'}}
                         </td>
                         <td NOWRAP>
                             <span class="p-column-title">Fecha Fin</span>
-                            {{dataFrom.dateEnd | date:'dd/mm/yyyy'}}
+                            {{dataFrom.dateEnd | date:'dd/MM/yyyy'}}
                         </td>
                         <td>
                             <span class="p-column-title">Estado</span>
@@ -79,7 +79,7 @@
                         </td>
                         <td NOWRAP style="text-align: center;">
                             <span class="p-column-title">Procesar</span>
-                            <p-dropdown [options]="drop" [(ngModel)]="dataFrom.status"></p-dropdown>
+                            <p-dropdown [options]="drop" [(ngModel)]="dataFrom.status" appendTo="body"></p-dropdown>
                             &nbsp;
                             <button pButton pRipple type="button" icon="pi pi-pencil" (click)="onEditMeet(dataFrom)"
                                 class="p-button-raised p-button-rounded p-button-info p-0 m-0">
@@ -147,9 +147,9 @@
         <p-tabPanel header="Citas procesadas">
             <p-table [value]="dataFromdbProcesed"
                 styleClass="p-datatable-customers p-datatable-gridlines p-datatable-striped" [responsive]="true"
-                [paginator]="true" [rows]="pageSize" dataKey="seqsimplemeet" [rowsPerPageOptions]="[10,30,60]"
-                [totalRecords]="sizeRecords" [lazy]="true" [autoLayout]="true" [columns]="cols"
-                (onLazyLoad)="chargeData($event)" selectionMode="single">
+                [paginator]="true" [rows]="pageSizeProcessed" dataKey="seqsimplemeethistory" [rowsPerPageOptions]="[10,15,30,60]"
+                [totalRecords]="sizeRecordsPro" [lazy]="true" [autoLayout]="true" [columns]="cols"
+                (onLazyLoad)="chargeData($event)" selectionMode="single" paginatorDropdownAppendTo="body">
                 <ng-template pTemplate="caption">
                     Listado
                 </ng-template>
@@ -175,11 +175,11 @@
                         </td>
                         <td NOWRAP>
                             <span class="p-column-title">Fecha inicio</span>
-                            {{dataFrom.dateService | date:'dd/mm/yyyy'}}
+                            {{dataFrom.dateService | date:'dd/MM/yyyy'}}
                         </td>
                         <td NOWRAP>
                             <span class="p-column-title">Fecha Fin</span>
-                            {{dataFrom.dateEnd | date:'dd/mm/yyyy'}}
+                            {{dataFrom.dateEnd | date:'dd/MM/yyyy'}}
                         </td>
                         <td>
                             <span class="p-column-title">Estado</span>
@@ -207,15 +207,10 @@
                             {{dataFrom.tools}}
                         </td>
                         <td style="text-align: center;">
-                            <span class="p-column-title">Ver/Asignar empleado</span>
+                            <span class="p-column-title">Ver empleados</span>
                             <button pButton pRipple type="button" icon="pi pi-eye"
-                                (click)="onRowSelectAssigned(dataFrom)" (click)="showAssignated()"
+                                (click)="showAssignatedProcessed(dataFrom)"
                                 class="p-button-raised p-button-rounded p-button-success" style="float: center">
-                            </button>
-                            &nbsp;
-                            <button pButton pRipple type="button" icon="pi pi-user-plus" (click)="showAssignation()"
-                                (click)="onRowSelectFather(dataFrom)"
-                                class="p-button-raised p-button-rounded p-button-info" style="float: center">
                             </button>
                         </td>
                     </tr>
@@ -318,7 +313,8 @@
                                 <i class="pi pi-id-card"></i>
                             </span>
                             <span class="p-float-label">
-                                <input type="text" id="inputgroup" pInputText formControlName="dni" maxlength="10" (keypress)="enterOnlyNumbers($event)">
+                                <input type="text" id="inputgroup" pInputText formControlName="dni" maxlength="10"
+                                    (keypress)="enterOnlyNumbers($event)">
                                 <label for="inputgroup">Cedula</label>
                             </span>
                         </div>
@@ -335,7 +331,8 @@
                                 <i class="pi pi-phone"></i>
                             </span>
                             <span class="p-float-label">
-                                <input type="text" id="inputgroup" pInputText formControlName="phone" maxlength="10" (keypress)="enterOnlyNumbers($event)">
+                                <input type="text" id="inputgroup" pInputText formControlName="phone" maxlength="10"
+                                    (keypress)="enterOnlyNumbers($event)">
                                 <label for="inputgroup">Telefono</label>
                             </span>
                         </div>
@@ -368,11 +365,9 @@
                     </div>
                     <div class="p-field p-col-12 p-md-6"></div>
                     <div class="p-field p-col-12 p-md-6">
-                        <span class="p-float-label">
-                            <p-dropdown [options]="dropProvince" (onChange)="onChangueProvince($event)"
-                                formControlName="province"></p-dropdown>
-                            <label for="dropdown">Provincia</label>
-                        </span>
+                        <span for="dropdown">Provincia</span>
+                        <p-dropdown [options]="dropProvince" (onChange)="onChangueProvince($event)"
+                            formControlName="province" appendTo="body"></p-dropdown>
                         <small *ngIf="formCita.get('province')?.errors && (formCita.get('province')?.dirty ||
                             formCita.get('province')?.touched)" class="p-error block">
                             <small *ngIf="formCita.get('province').errors?.required">
@@ -381,10 +376,8 @@
                         </small>
                     </div>
                     <div class="p-field p-col-12 p-md-6">
-                        <span class="p-float-label">
-                            <p-dropdown [options]="dropCity" formControlName="city"></p-dropdown>
-                            <label for="dropdown">Ciudad</label>
-                        </span>
+                        <span for="dropdown">Ciudad</span>
+                        <p-dropdown [options]="dropCity" formControlName="city" appendTo="body"></p-dropdown>
                         <small *ngIf="formCita.get('city')?.errors && (formCita.get('city')?.dirty ||
                             formCita.get('city')?.touched)" class="p-error block">
                             <small *ngIf="formCita.get('city').errors?.required">
@@ -419,9 +412,10 @@
                                 <div class="p-grid p-fluid p-0 m-0" [formGroup]="serviceForm">
                                     <div class="p-field p-col-12 p-md-6">
                                         <label style="font-size: 12px; top: -.75;" class="m-0 p-0">Tipo servicio</label>
-                                        <p-dropdown [options]="dropType" formControlName="typeService"></p-dropdown>
+                                        <p-dropdown [options]="dropType" formControlName="typeService" appendTo="body"></p-dropdown>
                                         <small *ngIf="serviceForm.get('typeService')?.errors && (serviceForm.get('typeService')?.dirty ||
-                                                        serviceForm.get('typeService')?.touched)" class="p-error block">
+                                                        serviceForm.get('typeService')?.touched)"
+                                            class="p-error block">
                                             <small *ngIf="serviceForm.get('typeService').errors?.required">
                                                 Requerido
                                             </small>
@@ -443,7 +437,8 @@
                                             </button>
                                         </div>
                                         <small *ngIf="serviceForm.get('serviceName')?.errors && (serviceForm.get('serviceName')?.dirty ||
-                                                        serviceForm.get('serviceName')?.touched)" class="p-error block">
+                                                        serviceForm.get('serviceName')?.touched)"
+                                            class="p-error block">
                                             <small *ngIf="serviceForm.get('serviceName').errors?.required">
                                                 Requerido
                                             </small>
@@ -473,7 +468,7 @@
                     </div>
                     <div class="p-field p-col-12 p-md-6">
                         <span class="p-float-label">
-                            <p-dropdown [options]="dropTools" formControlName="tools"></p-dropdown>
+                            <p-dropdown [options]="dropTools" formControlName="tools" appendTo="body"></p-dropdown>
                             <label for="dropdown">Utencilios</label>
                         </span>
                         <small *ngIf="formCita.get('tools')?.errors && (formCita.get('tools')?.dirty ||
@@ -584,6 +579,37 @@
             <ng-template pTemplate="caption">
                 Listado
             </ng-template>
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <ng-container *ngFor="let col of columns">
+                        <th>
+                            {{col.header}}
+                        </th>
+                    </ng-container>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-dataFrom let-index="rowIndex" let-columns="columns">
+                <tr>
+                    <td>
+                        <span class="p-column-title">Nombre</span>
+                        {{dataFrom.name}} - {{dataFrom.lastname}}
+                    </td>
+                    <td>
+                        <span class="p-column-title">Cargo</span>
+                        {{dataFrom.position}}
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                No hay registros que mostrar
+            </ng-template>
+        </p-table>
+    </p-dialog>
+    <p-dialog header="Empleados que laborarón" [(visible)]="showEmployesAssignedProccessed">
+        <p-table [value]="historyMeet.elementsAsArray" styleClass="p-datatable-customers p-datatable-gridlines p-datatable-striped"
+            [responsive]="true" [paginator]="true" [rows]="pageSize" dataKey="seqemploy"
+            [rowsPerPageOptions]="[10,30,60]" [totalRecords]="sizeRecordsAsigned" [lazy]="true" [autoLayout]="true"
+            [columns]="colsEmployees">
             <ng-template pTemplate="header" let-columns>
                 <tr>
                     <ng-container *ngFor="let col of columns">

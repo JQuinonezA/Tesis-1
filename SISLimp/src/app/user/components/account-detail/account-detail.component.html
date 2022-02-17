@@ -12,7 +12,7 @@
                         <i class="pi pi-user"></i>
                     </span>
                     <span class="p-float-label">
-                        <input type="text" id="inputgroup" pInputText formControlName="nameuser">
+                        <input type="text" id="name" pInputText formControlName="nameuser">
                         <label for="inputgroup">Nombre</label>
                     </span>
                 </div>
@@ -23,7 +23,7 @@
                         <i class="pi pi-user"></i>
                     </span>
                     <span class="p-float-label">
-                        <input type="text" id="inputgroup" pInputText formControlName="lastname">
+                        <input type="text" id="lastname" pInputText formControlName="lastname">
                         <label for="inputgroup">Apellido</label>
                     </span>
                 </div>
@@ -34,7 +34,7 @@
                         <i class="pi pi-phone"></i>
                     </span>
                     <span class="p-float-label">
-                        <input type="text" id="inputgroup" pInputText formControlName="phonenumber">
+                        <input type="text" id="phone" pInputText formControlName="phonenumber">
                         <label for="inputgroup">Telefono</label>
                     </span>
                 </div>
@@ -45,7 +45,7 @@
                         <i class="pi pi-envelope "></i>
                     </span>
                     <span class="p-float-label">
-                        <input type="text" id="inputgroup" pInputText formControlName="email">
+                        <input type="text" id="email" pInputText formControlName="email">
                         <label for="inputgroup">Correo electrónico</label>
                     </span>
                 </div>
@@ -56,7 +56,7 @@
                         <i class="pi pi-lock "></i>
                     </span>
                     <span class="p-float-label">
-                        <input type="password" pPassword  formControlName="password"/>
+                        <input type="password" pPassword formControlName="password" />
                         <label for="inputgroup">Contraseña</label>
                     </span>
                 </div>
@@ -67,7 +67,7 @@
                         <i class="pi pi-lock"></i>
                     </span>
                     <span class="p-float-label">
-                        <input type="password" pPassword  formControlName="confirmpassword"/>
+                        <input type="password" pPassword formControlName="confirmpassword" />
                         <label for="inputgroup">Repita contraseña</label>
                     </span>
                 </div>
@@ -79,24 +79,20 @@
                 </div>
             </div>
             <div class="p-field p-col-12 p-md-6">
-                <span class="p-float-label">
-                    <p-dropdown [options]="dropprovince" (onChange)="onChangueProvince($event)"
-                        formControlName="province"></p-dropdown>
-                    <label for="dropdown">Provincia</label>
-                </span>
+                <span for="dropdown">Provincia</span>
+                <p-dropdown [options]="dropprovince" (onChange)="onChangueProvince($event)" formControlName="province">
+                </p-dropdown>
             </div>
             <div class="p-field p-col-12 p-md-6">
-                <span class="p-float-label">
-                    <p-dropdown [options]="dropcity" formControlName="city"></p-dropdown>
-                    <label for="dropdown">Ciudad</label>
-                </span>
+                <span for="dropdown">Ciudad</span>
+                <p-dropdown [options]="dropcity" formControlName="city"></p-dropdown>
             </div>
         </div>
         <p-toolbar>
             <div class="p-toolbar-group-left">
             </div>
             <div class="p-toolbar-group-right">
-                <button pButton pRipple type="button" label="Editar" (click)="onEdit()" 
+                <button pButton pRipple type="button" label="Editar" (click)="onEdit()"
                     class="p-button-raised p-button-rounded p-button-warning p-mr-2 p-mb-2" icon="pi pi-user-edit"
                     style="float: right">
                 </button>

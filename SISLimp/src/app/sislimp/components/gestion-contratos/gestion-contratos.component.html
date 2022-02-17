@@ -37,11 +37,11 @@
                         </td>
                         <td>
                             <span class="p-column-title">Fecha inicio</span>
-                            {{dataFrom.datestart | date:'dd/mm/yyyy'}}
+                            {{dataFrom.datestart | date:'dd/MM/yyyy'}}
                         </td>
                         <td>
                             <span class="p-column-title">Fecha fin</span>
-                            {{dataFrom.dateend | date:'dd/mm/yyyy'}}
+                            {{dataFrom.dateend | date:'dd/MM/yyyy'}}
                         </td>
                         <td>
                             <span class="p-column-title">Nombre empresa</span>
@@ -49,7 +49,11 @@
                         </td>
                         <td>
                             <span class="p-column-title">Responsable empresa</span>
-                            {{dataFrom.legalperson_seqlegalperson}}
+                            {{dataFrom.legalperson_seqlegalperson | personaLegal:dropLegalperson}}
+                        </td>
+                        <td>
+                            <span class="p-column-title">Estado</span>
+                            {{dataFrom.status | selectedItemPipe:dropStatus}}
                         </td>
                         <td style="text-align: center;">
                             <button pButton pRipple type="button" icon="pi pi-eye"
@@ -62,7 +66,14 @@
                                 class="p-button-raised p-button-rounded p-button-info" style="float: center">
                             </button>
                         </td>
-                        <td>
+                        <td style="text-align: center;" NOWRAP>
+                            <span class="p-column-title">Procesar</span>
+                            <p-dropdown [options]="dropStatus" [(ngModel)]="dataFrom.status" appendTo="body"></p-dropdown>
+                            &nbsp;
+                            <button pButton pRipple type="button" icon="pi pi-save" 
+                                class="p-button-rounded p-button-raised p-button-success"></button>
+                        </td>
+                        <td style="text-align: center;">
                             <button pButton pRipple type="button" icon="pi pi-pencil" (click)="onEditContract(dataFrom)"
                                 class="p-button-rounded p-button-text"></button>
                         </td>

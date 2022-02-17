@@ -6,37 +6,41 @@
   <title>Document</title>
 </head>
 
-<body>
-  <ng-container>
-    <header id="header" class="fixed-top">
-      <div class="container-fluid">
-        <nav id="navbar" class="navbar">
-          <a href="#" class="logo">
-            <img src="../../../../assets/Picture1.png" width="45" alt=""
-              class="d-inline-block align-middle mr-2 img-fluid">
-            <span class="text-uppercase font-weight-bold">SISLIMP</span>
-          </a>
-          <ul>
-            <li><a [routerLink]="['/page/inicio']" [routerLinkActive]="['active']"
-                class="nav-link  scrollto text-uppercase font-weight-bold">Inicio</a></li>
-            <li><a [routerLink]="['/page/about']" [routerLinkActive]="['active']"
-                class="nav-link scrollto text-uppercase font-weight-bold">Nosotros</a></li>
-            <li><a [routerLink]="['/page/products']" [routerLinkActive]="['active']"
-                class="nav-link scrollto text-uppercase font-weight-bold">Productos</a></li>
-            <li><a [routerLink]="['/page/services']" [routerLinkActive]="['active']"
-                class="nav-link scrollto text-uppercase font-weight-bold">Servicios</a></li>
-            <li><a [routerLink]="['/page/contacto']" [routerLinkActive]="['active']"
-                class="nav-link scrollto text-uppercase font-weight-bold">Contacto</a></li>
-            <li><a [routerLink]="['/page/proservices']" [routerLinkActive]="['active']"
-                class="nav-link scrollto text-uppercase font-weight-bold">Productos y servicios</a></li>
-            <li><a [routerLink]="['/page/login']" [routerLinkActive]="['active']"
-                class="nav-link scrollto text-uppercase font-weight-bold">Login</a></li>
-          </ul>
-          <i class="fas fa-bars mobile-nav-toggle"></i>
-        </nav>
-      </div>
-    </header>
-  </ng-container>
-</body>
+<header id="header" class="fixed-top">
+  <div class="container d-flex align-items-center">
+    <!-- 
+    <h1 class="logo me-auto">
+      <a>
+        <img src="../../../../assets/Picture1.png" width="45" alt="" class="d-inline-block align-middle">
+        SISLIMP
+      </a>
+    </h1> -->
+    <!-- Uncomment below if you prefer to use an image logo -->
+    <a href="" class="logo me-auto"><img src="../../../../assets/Picture1.png" width="45" alt="" class="img-fluid"></a>
+
+    <nav id="navbar" class="navbar order-last order-lg-0">
+      <ul>
+        <li><a [routerLink]="['/page/inicio']" [routerLinkActive]="['active']"
+            class="nav-link  scrollto text-uppercase font-weight-bold">Inicio</a></li>
+        <li><a [routerLink]="['/page/about']" [routerLinkActive]="['active']"
+            class="nav-link scrollto text-uppercase font-weight-bold">Nosotros</a></li>
+        <li *ngIf="!showLogin"><a [routerLink]="['/page/products']" [routerLinkActive]="['active']"
+            class="nav-link scrollto text-uppercase font-weight-bold">Productos</a></li>
+        <li *ngIf="!showLogin"><a [routerLink]="['/page/services']" [routerLinkActive]="['active']"
+            class="nav-link scrollto text-uppercase font-weight-bold">Servicios</a></li>
+        <li><a [routerLink]="['/page/contacto']" [routerLinkActive]="['active']"
+            class="nav-link scrollto text-uppercase font-weight-bold">Contacto</a></li>
+        <li><a [routerLink]="['/page/proservices']" [routerLinkActive]="['active']"
+            class="nav-link scrollto text-uppercase font-weight-bold">Productos y servicios</a></li>
+        <li *ngIf="showLogin"><a [routerLink]="['/page/login']" [routerLinkActive]="['active']"
+            class="nav-link scrollto text-uppercase font-weight-bold">Login</a></li>
+        <li *ngIf="!showLogin"><a [routerLink]="['/user/']" [routerLinkActive]="['active']"
+            class="nav-link scrollto text-uppercase font-weight-bold">Módulo</a></li>
+      </ul>
+      <i class="bi bi-list mobile-nav-toggle" (click)="styleAdd()"></i>
+    </nav>
+
+  </div>
+</header>
 
 </html>

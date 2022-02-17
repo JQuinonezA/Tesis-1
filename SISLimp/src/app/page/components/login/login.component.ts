@@ -62,11 +62,18 @@ export class LoginComponent implements OnInit {
     }, { validator: this.MustMatch("password", "passwordConfirmation") })
   }
   onLogin() {
-    this.loginService.login(this.formLogin.value).subscribe(rest => {
-      if (rest) {
-        this.router.navigate(['user'])
-      }
-    })
+    console.log(this.formLogin.value);
+    this.formLogin.markAllAsTouched();
+    if (!this.formLogin.valid) {
+      this.messageService.add({ severity: 'error', detail: 'Ingrese usuario y contraseña' });
+      console.log('FORM', this.formLogin.value);
+    } else {
+      this.loginService.login(this.formLogin.value).subscribe(rest => {
+        if (rest) {
+          this.router.navigate(['user'])
+        }
+      })
+    }
   }
 
   MustMatch(controlName: string, matchingControlName: string) {
@@ -76,11 +83,8 @@ export class LoginComponent implements OnInit {
       const matchingControl = formGroup.controls[matchingControlName];
 
       if (matchingControl.errors && !matchingControl.errors.mustMatch) {
-        // return if another validator has already found an error on the matchingControl
         return;
       }
-
-      // set error on matchingControl if validation fails
       if (control.value !== matchingControl.value) {
         matchingControl.setErrors({ mustMatch: true });
       } else {
@@ -90,11 +94,11 @@ export class LoginComponent implements OnInit {
   }
   onSaveUser() {
     console.log(this.formNewUser.value);
+    this.formNewUser.markAllAsTouched();
     if (!this.formNewUser.valid) {
       this.messageService.add({ severity: 'error', detail: 'Formulario imcompleto' });
       console.log('FORM', this.formNewUser.value);
     } else {
-      // console.log('FORM', this.formNewUser.value);
       this.fillContainerLoginUSer(this.formNewUser);
     }
   }

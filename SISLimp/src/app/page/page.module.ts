@@ -39,7 +39,7 @@ import {MessageModule} from 'primeng/message';
     ReactiveFormsModule,
     ToastModule,
     MessageModule,
-    MessagesModule
+    MessagesModule,
   ]
 })
 export class PageModule { }

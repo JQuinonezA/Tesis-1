@@ -1,6 +1,6 @@
-
-export class Agreement{
-    seqagree: number;
+import { Employee } from './employee.model';
+export class AgreementHistory{
+    seqagreehistory: number;
     ruc: string;
     name: string;
     location: string;
@@ -15,8 +15,10 @@ export class Agreement{
     area: number;
     legalperson_seqlegalperson: number;
     addededServices: string;
+    employeeAssig: string;
     status: string;
-    ///no persist
-    elementAsArray: any;
+    
+    //nopersit
+    elementsAsArray: Employee[];
 
 }

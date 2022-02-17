@@ -7,8 +7,12 @@ import { Agreement } from '../../shared/models/agreements.model';
 import { Employee } from '../../shared/models/employee.model';
 import { ServiceAdd } from '../agendamiento-citas/agendamiento-citas.component';
 import { EmployeeService } from '../gestion-empleados/employee.service';
+import { LegalpersonService } from '../legalperson/legalperson.service';
 import { AgreementService } from './agreement.service';
-const CODECAT = 'SERVICETYPE'
+import { LegalPerson } from '../../shared/models/legalperson.model';
+import { AgreementHistory } from '../../shared/models/agreementhistory.model';
+const CODECAT = 'SERVICETYPE';
+const CONTRACTSTATUS = 'CONTRACTSTATUS';
 @Component({
   selector: 'app-gestion-contratos',
   templateUrl: './gestion-contratos.component.html',
@@ -18,6 +22,8 @@ const CODECAT = 'SERVICETYPE'
 export class GestionContratosComponent implements OnInit {
 
   drop: SelectItem[] = [];
+  dropStatus: SelectItem[] = [];
+  dropLegalperson: LegalPerson[] = [];
   fordropt: any
 
   //table
@@ -49,6 +55,11 @@ export class GestionContratosComponent implements OnInit {
   fromChangeEdit: boolean = false;
   formServices: FormGroup = new FormGroup({});
 
+  //just like u
+  fromPro: number = 0;
+  toPro: number = 10;
+  dataFromdbProcesed: AgreementHistory[] = [];
+  sizeRecordsPro: number = 0;
   constructor(
     private formBuilder: FormBuilder,
     private catalogueService: CataloguesService,
@@ -56,6 +67,7 @@ export class GestionContratosComponent implements OnInit {
     private agreeService: AgreementService,
     private emplyeeservice: EmployeeService,
     private sharedFuntions: FuntionsSharedService,
+    private legalPersonService: LegalpersonService,
   ) { }
   ngOnInit(): void {
     this.createCols();
@@ -71,7 +83,9 @@ export class GestionContratosComponent implements OnInit {
       { field: 'dateend', header: 'Fecha fin' },
       { field: 'nameEnterprice', header: 'Nombre empresa' },
       { field: 'respresent', header: 'Responsable empresa' },
+      { field: 'status', header: 'Estado' },
       { field: '', header: 'Ver/Asignar empleado' },
+      { field: '', header: 'Procesar' },
       { field: '', header: 'Editar' },
     ]
     this.colsEmployees = [
@@ -146,6 +160,7 @@ export class GestionContratosComponent implements OnInit {
         this.agreementContainer.servicedetail = this.formcontracts.controls.detailService.value;
         this.agreementContainer.subtotal = this.formcontracts.controls.subtotal.value;
         this.agreementContainer.area = this.formcontracts.controls.workarea.value;
+        this.agreementContainer.status = 'inactive';
         this.agreementContainer.addededServices = JSON.stringify(this.formcontracts.controls.services.value);
         this.fromChangeEdit = false;
         this.saveForm(this.agreementContainer);
@@ -164,6 +179,92 @@ export class GestionContratosComponent implements OnInit {
       }
 
     });
+    if(event){
+      this.fromPro = event.first;
+      this.toPro = event.rows;
+    }
+    this.agreeService.getAgreementsHIstory(this.fromPro, this.toPro).subscribe(rest => {
+      if(rest){
+        this.dataFromdbProcesed = rest.list;
+        this.sizeRecordsPro = rest.count;
+        this.dataFromdbProcesed.forEach(item => item.employeeAssig != "[]" ? item.elementsAsArray = JSON.parse(item.employeeAssig) : [])
+        console.log('dataFromdb', this.dataFromdbProcesed);
+      }
+    });
+  }
+
+  fillDataToUpdate(item: Agreement) {
+    console.log("this.item)", item);
+    if (item.status != 'inactive') {
+      if (item.status == 'active') {
+        this.emplyeeservice.getEmployessAssigned(null, item.seqagree).subscribe(res => {
+          if (res.length <= 0) {
+            this.messageService.add({ severity: 'error', detail: 'Debe haber al menos un empleado asignado' });
+          } else {
+            this.agreeService.saveAgreement(item).subscribe(rest => {
+              if (rest) this.messageService.add({ severity: 'success', detail: 'Solicitud actualizada' });
+              this.chargeData(null);
+            });
+          }
+        })
+      } else {
+        this.getEmployesAndUpdate(item.seqagree, item);
+        this.agreeService.saveAgreement(item).subscribe(rest => {
+          if (rest) this.messageService.add({ severity: 'success', detail: 'Solicitud actualizada' });
+          this.chargeData(null);
+        });
+      }
+
+
+    } else {
+      this.messageService.add({ severity: 'error', detail: 'Seleccione un estado diferente a en espera' });
+    }
+  }
+  getEmployesAndUpdate(seqagree: number, meet: Agreement){
+    this.emplyeeservice.getEmployessAssigned(null, seqagree).subscribe(rest => {
+      if(rest){
+        this.saveHistory(rest, meet);
+        rest.forEach(item => {
+          item.img = this.sharedFuntions.repair(item.img);
+          item.assigmentdayte = null;
+          item.endassigmentdate = null;
+          item.seqmeet = null;
+          this.emplyeeservice.updateEmployee(item).subscribe(() => console.log('employee removed'));
+        });
+      }
+    })
+  }
+  saveHistory(employees: Employee[], meet: Agreement){
+    console.log("employees", employees);
+    const history: AgreementHistory = this.createHistoryMeet(meet);
+    history.employeeAssig = JSON.stringify(employees.length > 0 ? employees : [] );
+    this.agreeService.saveAgreementHistory(history).subscribe(rest => {
+      if(rest){
+        this.messageService.add({ severity: 'success', detail: 'Historial actualzado' });
+      } else 
+      this.messageService.add({ severity: 'error', detail: 'Error, al actualizar' });
+    });
+  }
+  createHistoryMeet(agreement: Agreement){
+    const history: AgreementHistory = new AgreementHistory();
+    history.seqagreehistory = agreement.seqagree;
+    history.ruc = agreement.ruc;
+    history.name = agreement.name;
+    history.location = agreement.location;
+    history.principallocation = agreement.principallocation;
+    history.phone = agreement.phone;
+    history.type = agreement.type;
+    history.datestart = agreement.datestart;
+    history.dateend = agreement.dateend;
+    history.schedule = agreement.schedule;
+    history.servicedetail = agreement.servicedetail;
+    history.subtotal = agreement.area;
+    history.area = agreement.legalperson_seqlegalperson;
+    history.addededServices = agreement.addededServices;
+  
+    history.status = agreement.status;
+    return history;
+
   }
 
   createForm() {
@@ -187,6 +288,12 @@ export class GestionContratosComponent implements OnInit {
   getCatalogues() {
     this.catalogueService.getCataloguebyCodeCat(CODECAT).then(rest => {
       this.drop = this.catalogueService.constructModel(rest);
+    });
+    this.catalogueService.getCataloguebyCodeCat(CONTRACTSTATUS).then(rest => {
+      this.dropStatus = this.catalogueService.constructModel(rest);
+    });
+    this.legalPersonService.getLegalperson().subscribe(rest => {
+      this.dropLegalperson = rest;
     })
   }
 
@@ -215,6 +322,7 @@ export class GestionContratosComponent implements OnInit {
 
   onRowSelect(event: any) {
     event.data.assigmentdayte = this.selectedFather.datestart;
+    event.data.endassigmentdate = this.selectedFather.dateend;
     event.data.seqcontractassig = this.selectedFather.seqagree;
     this.selectdEmployes.push(event.data);
     console.log("this.selectdEmployes", this.selectdEmployes);

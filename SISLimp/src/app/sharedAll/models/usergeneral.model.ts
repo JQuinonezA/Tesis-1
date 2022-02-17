@@ -1,5 +1,5 @@
 
-export class UserGeneralModel{
+export class UserGeneralModel {
     sequser: number;
     name: string;
     lastname: string;
@@ -11,7 +11,12 @@ export class UserGeneralModel{
     datelastmodify: Date;
     loginuser_codeuser: number;
 }
-export class LoginUser{
+
+export class ErrorLogin{
+    message?: string;
+    code?: string;
+}
+export class LoginUser {
     codeuser: number;
     username: string;
     password: string;
@@ -23,7 +28,7 @@ export class LoginUser{
     datelastmodify: Date;
     loginusercol: string;
     token: string;
-    constructor(){
+    constructor() {
         this.datecreate = new Date();
         this.datelastmodify = new Date();
         this.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNjUyNTM2MjUxNH0.OgFAgwyjSc12IkTJ6zpqkLq4Z69MKb03RUxbiRef5BQ';

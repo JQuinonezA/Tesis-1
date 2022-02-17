@@ -63,6 +63,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/es';
 import { NZ_I18N, en_US } from 'ng-zorro-antd/i18n';
+import { PersonaLegalPipe } from './shared/pipes/persona-legal.pipe';
 registerLocaleData(en);
 
 
@@ -96,6 +97,7 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     HoursPipePipe,
     CityPipePipe,
     ForCityPipe,
+    PersonaLegalPipe,
   ],
   imports: [
     CommonModule,

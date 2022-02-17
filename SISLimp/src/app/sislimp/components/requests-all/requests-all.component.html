@@ -44,7 +44,7 @@
                         </td>
                         <td>
                             <span class="p-column-title">Fecha solicitud</span>
-                            {{dataFrom.dateCreate | date:'dd/mm/yyyy'}}
+                            {{dataFrom.dateCreate | date:'dd/MM/yyyy'}}
                         </td>
                         <td>
                             <span class="p-column-title">Estado</span>
@@ -52,7 +52,7 @@
                         </td>
                         <td>
                             <span class="p-column-title">Cambiar estado</span>
-                            <p-dropdown [options]="drop" [(ngModel)]="dataFrom.status"></p-dropdown>
+                            <p-dropdown [options]="drop" [(ngModel)]="dataFrom.status" appendTo="body"></p-dropdown>
                         </td>
                         <td style="text-align: center;">
                             <span class="p-column-title">Guardar</span>
@@ -168,7 +168,7 @@
                         </td>
                         <td>
                             <span class="p-column-title">Fecha solicitud</span>
-                            {{dataFrom.dateCreate | date:'dd/mm/yyyy'}}
+                            {{dataFrom.dateCreate | date:'dd/MM/yyyy'}}
                         </td>
                         <td>
                             <span class="p-column-title">Estado</span>

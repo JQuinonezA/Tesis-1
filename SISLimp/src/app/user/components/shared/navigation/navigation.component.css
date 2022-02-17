@@ -116,7 +116,7 @@
     border-radius: 50%;
 }
 :host ::ng-deep .p-menubar {
-    background-color: #0c9c09 !important;
+    background-color: #1E65AE !important;
   }
   :host ::ng-deep .p-menuitem-text {
     color: whitesmoke;
@@ -128,7 +128,7 @@
     > .p-menuitem
     > .p-menuitem-link
     .p-menuitem-text {
-    color: #000000;
+    color: #ffff;
   }
   
 

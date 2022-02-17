@@ -111,7 +111,7 @@
 </form>
 <div class="p-field p-col-12 p-md-6">
     <h6>Seleccione si ya esta registrado</h6>
-    <p-dropdown [options]="options" [(ngModel)]="valueCombo" (onChange)="onChangeCombo($event)"></p-dropdown>
+    <p-dropdown [options]="options" [(ngModel)]="valueCombo" (onChange)="onChangeCombo($event)" appendTo="body"></p-dropdown>
 </div>
 <p-toolbar>
     <div class="p-toolbar-group-left">

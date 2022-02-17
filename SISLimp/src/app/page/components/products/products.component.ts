@@ -40,6 +40,7 @@ export class ProductsComponent implements OnInit {
     this.findExtraData();
   }
   addProduct(idProd: number) {
+    console.log("idProd", idProd)
     this.productSelected = this.product.find(item => idProd == item.idProd);
     const exist = this.cart.some(prod => prod.idProd === this.productSelected.idProd);
     if (exist) {
@@ -113,7 +114,8 @@ export class ProductsComponent implements OnInit {
     return productsSend;
   }
   fillData(cart: ProductEquleton[]) {
-    const itemToSend: SolProduct = new SolProduct();
+    if(cart.length > 0){
+      const itemToSend: SolProduct = new SolProduct();
     itemToSend.codeuser = this.authService.codeUser;
     itemToSend.products = JSON.stringify(this.constructJSON(cart));
     itemToSend.nameuser = this.authService.username;
@@ -125,6 +127,10 @@ export class ProductsComponent implements OnInit {
       if (rest != null) this.messageService.add({ severity: 'success', detail: 'Solicitud registrada, un asesor se contactara con usted.' });
       this.cart = [];
     });
+    } else {
+      this.messageService.add({ severity: 'error', detail: 'Debe seleccionar al menos un producto.' });
+    }
+    
   }
 }
 

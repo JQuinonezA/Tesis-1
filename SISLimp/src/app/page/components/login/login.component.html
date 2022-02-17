@@ -1,10 +1,244 @@
 <p-toast></p-toast>
-<header class="site-header inicio mb-5">
-    <div class="contenedor contenido-header">
-        <h1 style="font-style: italic;">Inicio de sesion</h1>
+<div class="breadcrumbs" data-aos="fade-in">
+    <div class="container">
+        <h2>Inicio de sesión</h2>
+        <p>Puedes iniciar sesión o crear una cuenta.</p>
     </div>
-</header>
-<div style="width: 1140px; margin: auto;">
+</div>
+<br>
+<section id="contact" class="contact">
+    <div class="container" data-aos="fade-up">
+        <div class="row">
+            <div class="col-lg-5 d-flex align-items-stretch">
+                <form [formGroup]="formLogin" (ngSubmit)="onLogin()" class="php-email-form">
+                    <h3>Login</h3>
+                    <div class="mt-5">
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <label for="name">Correo electrónico</label>
+                                <input id="inputEmail" type="email" class="form-control" formControlName="username">
+                                <small *ngIf="formLogin.get('username')?.errors && (formLogin.get('username')?.dirty ||
+                                formLogin.get('username')?.touched)" class="p-error block">
+                                    <small *ngIf="formLogin.get('username').errors?.required">
+                                        Requerido
+                                    </small>
+                                </small>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label for="name">Contraseña</label>
+                                <input id="inputPassword" type="password" formControlName="password"
+                                    class="form-control">
+                                <small *ngIf="formLogin.get('password')?.errors && (formLogin.get('password')?.dirty ||
+                                formLogin.get('password')?.touched)" class="p-error block">
+                                    <small *ngIf="formLogin.get('password').errors?.required">
+                                        Requerido
+                                    </small>
+                                </small>
+                            </div>
+                            <div class="form-group col-12 mb-3" style="text-align: center;">
+                                <button type="button" class="btn btn-primary btn-block py-2"
+                                    style="width: 100%; background-color: #1E65AE;" (click)="onLogin()">Acceder
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-7 mt-5 mt-lg-0 d-flex align-items-stretch">
+                <div class="info">
+                    <h3>Registrate</h3>
+                    <form [formGroup]="formNewUser" (ngSubmit)="onSaveUser()">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="input-group mt-4">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-user text-muted"></i>
+                                    </span>
+                                    <input id="firstName" type="text" name="firstname" placeholder="Nombre"
+                                        formControlName="name" class="form-control bg-white border-left-0 border-md">
+                                </div>
+                                <small *ngIf="formNewUser.get('name')?.errors && (formNewUser.get('name')?.dirty ||
+                                formNewUser.get('name')?.touched)" class="p-error block">
+                                    <small *ngIf="formNewUser.get('name').errors?.required">
+                                        Requerido
+                                    </small>
+                                </small>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group mt-4">
+                                    <span class="input-group-text ">
+                                        <i class="fa fa-user text-muted"></i>
+                                    </span>
+                                    <input id="lastName" type="text" name="lastname" placeholder="Apellido"
+                                        formControlName="lastname"
+                                        class="form-control bg-white border-left-0 border-md">
+                                </div>
+                                <small *ngIf="formNewUser.get('lastname')?.errors && (formNewUser.get('lastname')?.dirty ||
+                                formNewUser.get('lastname')?.touched)" class="p-error block">
+                                    <small *ngIf="formNewUser.get('lastname').errors?.required">
+                                        Requerido
+                                    </small>
+                                </small>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group mt-4">
+                                    <span class="input-group-text ">
+                                        <i class="fa fa-envelope text-muted"></i>
+                                    </span>
+                                    <input id="email" type="email" name="email" placeholder="Correo electrónico"
+                                        formControlName="email" class="form-control bg-white border-left-0 border-md">
+                                </div>
+                                <small *ngIf="formNewUser.get('email')?.errors && (formNewUser.get('email')?.dirty ||
+                                formNewUser.get('email')?.touched)" class="p-error block">
+                                    <small *ngIf="formNewUser.get('email').errors?.required">
+                                        Requerido
+                                    </small>
+                                </small>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group mt-4">
+                                    <span class="input-group-text ">
+                                        <i class="fa fa-phone-square text-muted"></i>
+                                    </span>
+                                    <select id="countryCode" name="countryCode" style="max-width: 60px;"
+                                        class="custom-select form-control">
+                                        <option value="">+593</option>
+                                    </select>
+                                    <input id="phoneNumber" type="tel" name="phone" placeholder="Teléfono"
+                                        formControlName="phoneNumber"
+                                        class="form-control bg-white border-md border-left-0 pl-3">
+                                </div>
+                                <small *ngIf="formNewUser.get('phoneNumber')?.errors && (formNewUser.get('phoneNumber')?.dirty ||
+                                formNewUser.get('phoneNumber')?.touched)" class="p-error block">
+                                    <small *ngIf="formNewUser.get('phoneNumber').errors?.required">
+                                        Requerido
+                                    </small>
+                                </small>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group mt-4">
+                                    <span class="input-group-text ">
+                                        <i class="fa fa-globe text-muted"></i>
+                                    </span>
+                                    <select id="provinica" name="nomprovi" formControlName="province"
+                                        class="form-control custom-select bg-white border-left-0 border-md">
+                                        <option value="">Provincia</option>
+                                        <ng-container *ngFor="let item of provinces">
+                                            <option value="{{item.code}}">{{item.name}}</option>
+                                        </ng-container>
+                                    </select>
+                                </div>
+                                <small *ngIf="formNewUser.get('province')?.errors && (formNewUser.get('province')?.dirty ||
+                                formNewUser.get('province')?.touched)" class="p-error block">
+                                    <small *ngIf="formNewUser.get('province').errors?.required">
+                                        Requerido
+                                    </small>
+                                </small>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group mt-4">
+                                    <span class="input-group-text ">
+                                        <i class="fa fa-globe text-muted"></i>
+                                    </span>
+                                    <select id="ciudad" name="nomciudad" formControlName="city"
+                                        class="form-control custom-select bg-white border-left-0 border-md">
+                                        <option value="">Ciudad</option>
+                                        <ng-container *ngFor="let item of  cities">
+                                            <option value="{{item.code}}">{{item.name}}</option>
+                                        </ng-container>
+                                    </select>
+                                </div>
+                                <small *ngIf="formNewUser.get('city')?.errors && (formNewUser.get('city')?.dirty ||
+                                formNewUser.get('city')?.touched)" class="p-error block">
+                                    <small *ngIf="formNewUser.get('city').errors?.required">
+                                        Requerido
+                                    </small>
+                                </small>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group mt-4">
+                                    <span class="input-group-text ">
+                                        <i class="fa fa-lock text-muted"></i>
+                                    </span>
+                                    <input id="password" type="password" name="password" placeholder="Contraseña"
+                                        formControlName="password"
+                                        class="form-control bg-white border-left-0 border-md">
+                                </div>
+                                <small *ngIf="formNewUser.get('password')?.errors && (formNewUser.get('password')?.dirty ||
+                                formNewUser.get('password')?.touched)" class="p-error block">
+                                    <small *ngIf="formNewUser.get('password').errors?.required">
+                                        Requerido
+                                    </small>
+                                </small>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group mt-4">
+                                    <span class="input-group-text ">
+                                        <i class="fa fa-lock text-muted"></i>
+                                    </span>
+                                    <input id="passwordConfirmation" type="password" name="passwordConfirmation"
+                                        formControlName="passwordConfirmation" placeholder="Confirmar contraseña"
+                                        class="form-control bg-white border-left-0 border-md">
+                                </div>
+                                <small
+                                    *ngIf="formNewUser.controls.passwordConfirmation.errors && formNewUser.controls.passwordConfirmation.touched"
+                                    style='color:#ff7355'>
+                                    <small *ngIf="formNewUser.controls.passwordConfirmation.errors?.required">
+                                        Requerido
+                                    </small>
+                                    <small *ngIf="formNewUser.controls.passwordConfirmation.errors?.mustMatch">Las
+                                        contraseñas
+                                        deben coincidir</small>
+                                </small>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check mt-4">
+                                    <div class="custom-control custom-checkbox">
+                                        <input id="customCheck2" type="checkbox" class="form-check-input"
+                                            formControlName="conditions">
+                                        <label for="customCheck2" class="form-check-label">
+                                            <p>
+                                                <b>
+                                                    Acepta terminos y
+                                                    condiciones
+                                                    del
+                                                    servicio.
+                                                </b>
+                                            </p>
+                                        </label>
+                                    </div>
+                                </div>
+                                <small *ngIf="formNewUser.get('conditions')?.errors && (formNewUser.get('conditions')?.dirty ||
+                                formNewUser.get('conditions')?.touched)" class="p-error block">
+                                    <small *ngIf="formNewUser.get('conditions').errors?.required">
+                                        Requerido
+                                    </small>
+                                </small>
+                            </div>
+                            <div class="input-group col-lg-12 mx-auto mb-0 text-center">
+                                <div class="col-3"></div>
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-primary btn-block py-2"
+                                        style="width: 100%; background-color: #1E65AE;" (click)="onSaveUser()">
+                                        <span class="font-weight-bold">Crear cuenta</span>
+                                    </button>
+                                </div>
+                                <div class="col-3"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+
+<!-- <div style="width: 1140px; margin: auto;">
     <div class="container card mb-5 border-0 rounded-3 shadow-lg">
         <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav nav-pills nav-justified">
             <li [ngbNavItem]="1">
@@ -156,9 +390,6 @@
                                                 placeholder="Confirmar contraseña"
                                                 class="form-control bg-white border-left-0 border-md">
                                         </div>
-                                        <!-- <div style='color:#ff7355' *ngIf="formNewUser.controls.passwordConfirmation.errors && formNewUser.controls.passwordConfirmation.touched ">
-                                            <p>{{formNewUser.controls.passwordConfirmation.errors | json}}</p>
-                                        </div> -->
                                         <div *ngIf="formNewUser.controls.passwordConfirmation.errors && formNewUser.controls.passwordConfirmation.touched" style='color:#ff7355'  >
                                             <div *ngIf="formNewUser.controls.passwordConfirmation.errors?.required">Campo requerido</div>
                                             <div *ngIf="formNewUser.controls.passwordConfirmation.errors?.mustMatch">Las contraseñas deben coincidir</div>
@@ -201,4 +432,4 @@
         </ul>
     </div>
     <div [ngbNavOutlet]="nav" class="container card mb-5 border-0 rounded-3 shadow-lg"></div>
-</div>
+</div> -->

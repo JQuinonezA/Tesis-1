@@ -43,7 +43,7 @@
                                         appendTo="body"></p-calendar>
                                 </ng-template>
                                 <ng-template pTemplate="output">
-                                    {{dataFrom.dateobservation | date:'dd/mm/yyyy'}}
+                                    {{dataFrom.dateobservation | date:'dd/MM/yyyy'}}
                                 </ng-template>
                             </p-cellEditor>
                         </td>
@@ -341,7 +341,7 @@
                                 <i class="pi pi-lock"></i>
                             </span>
                             <span class="p-float-label">
-                                <p-autoComplete style="width: inherit;" formControlName="employename" [suggestions]="results" field="name"
+                                <p-autoComplete  formControlName="employename" [suggestions]="results" field="name"
                                     (completeMethod)="searchEmploy($event)" (onSelect)="watchIt($event)">
                                     <ng-template let-employee pTemplate="item">
                                         <div>
