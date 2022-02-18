@@ -1,3 +1,6 @@
-:host ::ng-deep .p-autocomplete{
-    width: inherit !important;
+:host ::ng-deep .p-inputgroup .p-inputtext,
+.p-fluid .p-inputgroup .p-inputtext,
+.p-inputgroup .p-inputwrapper,
+.p-inputgroup .p-inputwrapper > .p-component {
+    width: auto !important;
 }

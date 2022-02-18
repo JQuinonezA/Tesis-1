@@ -32,7 +32,8 @@ export class PrincipalComponent implements OnInit {
     ]
     this.items2 = [
       {
-        label: 'Menu',
+        label: 'Citas',
+        icon: 'pi pi-fw pi-tags',
         style: 'font-size: 0.9rem !important',
         items: [
           {
@@ -59,23 +60,26 @@ export class PrincipalComponent implements OnInit {
         ]
       },
       {
-        label: 'Catalogo',
+        label: 'Catálogos',
+        icon:'fa fa-cubes',
         style: 'font-size: 0.9rem !important',
         items: [
           {
-            label: 'Catalogo de servicios',
+            label: 'Catálogo de servicios',
             icon: 'pi pi-book',
             routerLink: ['/system/catServices']
           },
           {
-            label: 'Catalogo de productos',
+            label: 'Catálogo de productos',
             icon: 'pi pi-book',
             routerLink: ['/system/catProducts']
           }
         ]
       },
       {
-        label: '',
+        
+        label: 'Empleados y proveerdores',
+        icon:'fa fa-users',
         style: 'font-size: 0.9rem !important',
         items: [
           {
@@ -97,6 +101,7 @@ export class PrincipalComponent implements OnInit {
       },
       {
         label: 'Gestión de inventario',
+        icon:'pi pi-book',
         style: 'font-size: 0.9rem !important',
         items: [
           {
@@ -107,7 +112,8 @@ export class PrincipalComponent implements OnInit {
         ]
       },
       {
-        label: '',
+        label: 'Calendario',
+        icon:' pi pi-calendar-plus',
         style: 'font-size: 0.9rem !important',
         items: [
           {

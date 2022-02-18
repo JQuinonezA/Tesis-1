@@ -144,14 +144,6 @@
                     No hay registros que mostrar
                 </ng-template>
             </p-table>
-            <p-toolbar>
-                <div class="p-toolbar-group-left"></div>
-                <div class="p-toolbar-group-right">
-                    <button pButton pRipple type="button" label="Registrar nueva" icon="pi pi-plus"
-                        class="p-button-raised p-button-rounded p-button-success p-mr-2 p-mb-2 ">
-                    </button>
-                </div>
-            </p-toolbar>
         </p-tabPanel>
         <p-tabPanel header="Formulario de Observaciones">
             <div class="card-header">
@@ -166,7 +158,8 @@
                                 <i class="pi pi-user"></i>
                             </span>
                             <span class="p-float-label">
-                                <input type="text" id="inputgroup" pInputText formControlName="dni" maxlength="10"  (keypress)="sharedFuntions.enterOnlyNumbers($event)">
+                                <input type="text" id="inputgroup" pInputText formControlName="dni" maxlength="10"
+                                    (keypress)="sharedFuntions.enterOnlyNumbers($event)">
                                 <label for="inputgroup">Cedula/RUC</label>
                             </span>
                         </div>
@@ -237,7 +230,8 @@
                                 <i class="pi pi-envelope "></i>
                             </span>
                             <span class="p-float-label">
-                                <input type="text" id="inputgroup" pInputText formControlName="phone" maxlength="10"  (keypress)="sharedFuntions.enterOnlyNumbers($event)">
+                                <input type="text" id="inputgroup" pInputText formControlName="phone" maxlength="10"
+                                    (keypress)="sharedFuntions.enterOnlyNumbers($event)">
                                 <label for="inputgroup">Teléfono</label>
                             </span>
                         </div>
@@ -267,11 +261,9 @@
                         </small>
                     </div>
                     <div class="p-field p-col-12 p-md-6">
-                        <span class="p-float-label">
-                            <p-dropdown [options]="dropProvince" (onChange)="onChangueProvince($event)"
-                                formControlName="province"></p-dropdown>
-                            <label for="dropdown">Provincia</label>
-                        </span>
+                        <span for="dropdown">Provincia</span>
+                        <p-dropdown [options]="dropProvince" (onChange)="onChangueProvince($event)"
+                            formControlName="province"></p-dropdown>
                         <small *ngIf="formCustomer.get('province')?.errors && (formCustomer.get('province')?.dirty ||
                             formCustomer.get('province')?.touched)" class="p-error block">
                             <small *ngIf="formCustomer.get('province').errors?.required">
@@ -280,10 +272,8 @@
                         </small>
                     </div>
                     <div class="p-field p-col-12 p-md-6">
-                        <span class="p-float-label">
-                            <p-dropdown [options]="dropCity" formControlName="city"></p-dropdown>
-                            <label for="dropdown">Ciudad</label>
-                        </span>
+                        <span for="dropdown">Ciudad</span>
+                        <p-dropdown [options]="dropCity" formControlName="city"></p-dropdown>
                         <small *ngIf="formCustomer.get('city')?.errors && (formCustomer.get('city')?.dirty ||
                             formCustomer.get('city')?.touched)" class="p-error block">
                             <small *ngIf="formCustomer.get('city').errors?.required">
@@ -311,10 +301,8 @@
                     </div>
                     <!-- <div class="p-field p-col-12 p-md-6"></div> -->
                     <div class="p-field p-col-12 p-md-6">
-                        <span class="p-float-label">
-                            <p-dropdown [options]="dropType" formControlName="typeservice"></p-dropdown>
-                            <label for="dropdown">Tipo servicio</label>
-                        </span>
+                        <span for="dropdown">Tipo servicio</span>
+                        <p-dropdown [options]="dropType" formControlName="typeservice"></p-dropdown>
                         <small *ngIf="formCustomer.get('typeservice')?.errors && (formCustomer.get('typeservice')?.dirty ||
                             formCustomer.get('typeservice')?.touched)" class="p-error block">
                             <small *ngIf="formCustomer.get('typeservice').errors?.required">
@@ -323,11 +311,9 @@
                         </small>
                     </div>
                     <div class="p-field p-col-12 p-md-6">
-                        <span class="p-float-label">
-                            <textarea id="float-input" rows="3" cols="10" pInputTextarea formControlName="serviceDetail">
+                        <span for="dropdown">Detalle servicio</span>
+                        <textarea id="float-input" rows="3" cols="10" pInputTextarea formControlName="serviceDetail">
                                 </textarea>
-                            <label for="dropdown">Detalle servicio</label>
-                        </span>
                         <small *ngIf="formCustomer.get('serviceDetail')?.errors && (formCustomer.get('serviceDetail')?.dirty ||
                             formCustomer.get('serviceDetail')?.touched)" class="p-error block">
                             <small *ngIf="formCustomer.get('serviceDetail').errors?.required">
@@ -341,7 +327,7 @@
                                 <i class="pi pi-lock"></i>
                             </span>
                             <span class="p-float-label">
-                                <p-autoComplete  formControlName="employename" [suggestions]="results" field="name"
+                                <p-autoComplete formControlName="employename" [suggestions]="results" field="name"
                                     (completeMethod)="searchEmploy($event)" (onSelect)="watchIt($event)">
                                     <ng-template let-employee pTemplate="item">
                                         <div>

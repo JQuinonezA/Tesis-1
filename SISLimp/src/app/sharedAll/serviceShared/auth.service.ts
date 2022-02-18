@@ -23,13 +23,12 @@ export class AuthService {
     return this.userLogged.asObservable();
   }
 
-  login(authData: User): Observable<UserGeneralModel> {
+   login(authData: User): Observable<UserGeneralModel> {
     return this.http.post<any>(`${environment.API_URL}/auth/login`, authData).pipe(map(res => {
-      //console.log('REST LOGIN', res);
       if (res.hasOwnProperty('codeuser')) {
         this.saveToken(res.token, res.loginusercol, res.codeuser, res.username);
         this.userLogged.next(true);
-        return res
+        return res;
       }
     }),
       catchError(error => this.handleError(error))
@@ -56,10 +55,12 @@ export class AuthService {
     // setear userlogged = isExpired
   }
   private saveToken(token: string, role: string, code: number, username: string) {
+    console.warn(code);
     localStorage.setItem('token', token);
     localStorage.setItem('role', role);
     localStorage.setItem('username', username);
     localStorage.setItem('code', code + "");
+    this.codeUser = Number(localStorage.getItem('code'));
   }
   private handleError(error): Observable<never> {
 

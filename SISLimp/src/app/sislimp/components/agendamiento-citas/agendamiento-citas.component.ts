@@ -115,16 +115,16 @@ export class AgendamientoCitasComponent implements OnInit {
         this.dataFromdb.forEach(item => this.completeCityDrop(item.cliProvince, 'dataFromdb'));
         //this.dataFromdbProcesed.forEach(item => this.completeCityDrop(item.cliProvince, 'dataFromdbProcesed'));
         console.log('dataFromdb', this.dataFromdb);
-        
+
       }
 
     });
-    if(event){
+    if (event) {
       this.fromPro = event.first;
       this.toPro = event.rows;
     }
     this.simpleMeetService.getSimpleMeetsHistory(this.fromPro, this.toPro).subscribe(rest => {
-      if(rest){
+      if (rest) {
         this.dataFromdbProcesed = rest.list;
         this.sizeRecordsPro = rest.count;
         this.dataFromdbProcesed.forEach(item => item.employeesAssig != "[]" ? item.elementsAsArray = JSON.parse(item.employeesAssig) : [])
@@ -258,10 +258,10 @@ export class AgendamientoCitasComponent implements OnInit {
     this.showEmployesAssigned = true;
   }
   showAssignatedProcessed(history: SimplemeetHistory) {
-    this.historyMeet = {...history};
+    this.historyMeet = { ...history };
     this.showEmployesAssignedProccessed = true;
   }
-  
+
   getEmployees(event: LazyLoadEvent) {
     this.employeeService.getEmployesToBesAssigned().subscribe(res => {
       res.forEach(item => {
@@ -340,9 +340,9 @@ export class AgendamientoCitasComponent implements OnInit {
       this.messageService.add({ severity: 'error', detail: 'Seleccione un estado diferente a en espera' });
     }
   }
-  getEmployesAndUpdate(seqmeet: number, meet: Simplemeet){
+  getEmployesAndUpdate(seqmeet: number, meet: Simplemeet) {
     this.employeeService.getEmployessAssigned(seqmeet, null).subscribe(rest => {
-      if(rest){
+      if (rest) {
         this.saveHistory(rest, meet);
         rest.forEach(item => {
           item.img = this.sharedFuntions.repair(item.img);
@@ -354,18 +354,19 @@ export class AgendamientoCitasComponent implements OnInit {
       }
     })
   }
-  saveHistory(employees: Employee[], meet: Simplemeet){
+  saveHistory(employees: Employee[], meet: Simplemeet) {
     console.log("employees", employees);
     const historymeet = this.createHistoryMeet(meet);
-    historymeet.employeesAssig = JSON.stringify(employees.length > 0 ? employees : [] );
+    historymeet.employeesAssig = JSON.stringify(employees.length > 0 ? employees : []);
     this.simpleMeetService.saveSimpleMeetHistory(historymeet).subscribe(rest => {
-      if(rest){
+      if (rest) {
         this.messageService.add({ severity: 'success', detail: 'Historial actualzado' });
-      } else 
-      this.messageService.add({ severity: 'error', detail: 'Error, al actualziar' });
+        this.chargeData(null)
+      } else
+        this.messageService.add({ severity: 'error', detail: 'Error, al actualziar' });
     });
   }
-  createHistoryMeet(simplemeet: Simplemeet){
+  createHistoryMeet(simplemeet: Simplemeet) {
     const history: SimplemeetHistory = new SimplemeetHistory();
     history.seqsimplemeethistory = simplemeet.seqsimplemeet;
     history.dateService = simplemeet.dateService;
@@ -381,7 +382,7 @@ export class AgendamientoCitasComponent implements OnInit {
     history.services = simplemeet.services;
     history.hoursStimated = simplemeet.hoursStimated;
     history.status = simplemeet.status;
-    
+
     history.codeUser = simplemeet.codeUser;
     history.tools = simplemeet.tools;
     history.stimatedValue = simplemeet.stimatedValue;
@@ -396,6 +397,15 @@ export class AgendamientoCitasComponent implements OnInit {
     this.activeIndex1 = 2;
     this.populateDataEdit(dataFrom);
     this.meetToUpdate = dataFrom;
+  }
+  cancelEdit() {
+    this.formCita.reset();
+    while (this.services.controls.length > 1) {
+      this.deleteService(0);
+    }
+    this.chargeData(null);
+    this.activeIndex1 = 0;
+    this.fromEdit = false;
   }
   populateDataEdit(data: Simplemeet) {
     this.formCita.patchValue({

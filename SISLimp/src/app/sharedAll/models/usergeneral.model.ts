@@ -10,6 +10,18 @@ export class UserGeneralModel {
     datecreate: Date;
     datelastmodify: Date;
     loginuser_codeuser: number;
+    constructor(){
+        this.sequser = 0;
+        this.name = '';
+        this.lastname = '';
+        this.email = '';
+        this.phonenumber = '';
+        this.province = '';
+        this.city = '';
+        this.datecreate = new Date();
+        this.datelastmodify = new Date();
+        this.loginuser_codeuser = 0;
+    }
 }
 
 export class ErrorLogin{

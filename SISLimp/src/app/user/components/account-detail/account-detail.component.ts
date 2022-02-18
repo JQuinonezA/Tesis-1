@@ -39,9 +39,10 @@ export class AccountDetailComponent implements OnInit {
   }
   chargeData() {
     this.userService.getUserExtraData(this.authService.codeUser).then(rest => {
-      // console.log(rest);
-      this.dataUser = rest;
-      this.createForm();
+      if (rest) {
+        this.dataUser = rest;
+        this.createForm();
+      }
     });
   }
   getCatalogues() {
@@ -57,6 +58,7 @@ export class AccountDetailComponent implements OnInit {
   }
   createForm() {
     console.log("AKI?", this.dataUser);
+
     this.formUser = this.formBuilder.group({
       nameuser: [this.dataUser.name, Validators.required],
       lastname: [this.dataUser.lastname, Validators.required],
@@ -66,7 +68,7 @@ export class AccountDetailComponent implements OnInit {
       confirmpassword: ['', Validators.required],
       province: [this.dataUser.province, Validators.required],
       city: ['', Validators.required],
-    },{ validator: this.MustMatch("password", "confirmpassword") });
+    }, { validator: this.MustMatch("password", "confirmpassword") });
   }
   MustMatch(controlName: string, matchingControlName: string) {
 
@@ -100,11 +102,11 @@ export class AccountDetailComponent implements OnInit {
     if (this.loginUser.password != null && this.loginUser.password != '') {
       this.userService.updateLoginUSer(this.loginUser).then(rest => {
         console.log("SAVED LOGIN USER?", rest)
-        if(rest != null) this.messageService.add({severity:'success', detail: 'Actualizado correctamente'});
+        if (rest != null) this.messageService.add({ severity: 'success', detail: 'Actualizado correctamente' });
       });
     }
     this.userService.updateDataUser(this.dataUser).then(rest => {
-      if(rest != null) this.messageService.add({severity:'success', detail: 'Actualizado correctamente'});
+      if (rest != null) this.messageService.add({ severity: 'success', detail: 'Actualizado correctamente' });
       this.chargeData();
     });
   }

@@ -20,12 +20,15 @@ export class OrdersComponent implements OnInit {
   realPRoducts: ProductModel[] = [];
   solProduct: SolProduct[] = [];
   drop: SelectItem[] = [];
+  codeUser: number;
   constructor(
     private orderService: OdersService,
     private authService: AuthService,
     private productsService: ProductosService,
     private catalogueService: CataloguesService,
-  ) { }
+  ) { 
+    this.codeUser =  this.authService.codeUser;
+  }
 
   ngOnInit(): void {
     this.getSolProducts();
@@ -58,18 +61,16 @@ export class OrdersComponent implements OnInit {
     return prods;
   }
   async getSolProducts() {
-    this.orderService.getSolProducts(this.authService.codeUser).subscribe(rest => {
-      rest.forEach(async item => {
-        let productsQuantity: PoductsQuantity[] = [];
-        productsQuantity = [...productsQuantity, ...this.transformFromJSON(item.products)];
-        item.elementAsArray =  await this.getProductsRelated(productsQuantity);
-      });
-      this.solProduct = rest;
-      
-      console.log("VEAMOS ", this.solProduct);
-      console.log("VEAMOS ", rest);
-
-    })
+    if(this.codeUser && this.codeUser !=0 ){
+      this.orderService.getSolProducts(this.codeUser).subscribe(rest => {
+        rest.forEach(async item => {
+          let productsQuantity: PoductsQuantity[] = [];
+          productsQuantity = [...productsQuantity, ...this.transformFromJSON(item.products)];
+          item.elementAsArray =  await this.getProductsRelated(productsQuantity);
+        });
+        this.solProduct = rest;
+        console.log(this.solProduct);
+      })
+    } 
   }
-
 }

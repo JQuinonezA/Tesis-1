@@ -62,7 +62,6 @@ export class LoginComponent implements OnInit {
     }, { validator: this.MustMatch("password", "passwordConfirmation") })
   }
   onLogin() {
-    console.log(this.formLogin.value);
     this.formLogin.markAllAsTouched();
     if (!this.formLogin.valid) {
       this.messageService.add({ severity: 'error', detail: 'Ingrese usuario y contraseña' });
@@ -70,7 +69,7 @@ export class LoginComponent implements OnInit {
     } else {
       this.loginService.login(this.formLogin.value).subscribe(rest => {
         if (rest) {
-          this.router.navigate(['user'])
+          this.router.navigate(['user']);
         }
       })
     }

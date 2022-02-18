@@ -119,7 +119,7 @@
   background-color: #256eb8 !important;
 }
 :host ::ng-deep .p-menuitem-text {
-  color: whitesmoke;
+  color: #1E65AE;
 }
 :host
   ::ng-deep

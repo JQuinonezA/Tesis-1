@@ -60,6 +60,9 @@ export class GestionContratosComponent implements OnInit {
   toPro: number = 10;
   dataFromdbProcesed: AgreementHistory[] = [];
   sizeRecordsPro: number = 0;
+  colsProcessed: any[];
+  showEmployesAssignedProccessed: boolean = false;
+  historyAgreement: AgreementHistory = new AgreementHistory();
   constructor(
     private formBuilder: FormBuilder,
     private catalogueService: CataloguesService,
@@ -85,8 +88,17 @@ export class GestionContratosComponent implements OnInit {
       { field: 'respresent', header: 'Responsable empresa' },
       { field: 'status', header: 'Estado' },
       { field: '', header: 'Ver/Asignar empleado' },
-      { field: '', header: 'Procesar' },
       { field: '', header: 'Editar' },
+      { field: '', header: 'Procesar' },
+    ]
+    this.colsProcessed = [
+      { field: 'codeContract', header: 'Código contrato' },
+      { field: 'datestart', header: 'Fecha inicio' },
+      { field: 'dateend', header: 'Fecha fin' },
+      { field: 'nameEnterprice', header: 'Nombre empresa' },
+      { field: 'respresent', header: 'Responsable empresa' },
+      { field: 'status', header: 'Estado' },
+      { field: '', header: 'Ver empleado' },
     ]
     this.colsEmployees = [
       { field: 'nameEmploye', header: 'Nombre' },
@@ -99,6 +111,10 @@ export class GestionContratosComponent implements OnInit {
   }
   showAssignated() {
     this.showEmployesAssigned = true;
+  }
+  showAssignatedProcessed(history: AgreementHistory) {
+    this.historyAgreement = { ...history };
+    this.showEmployesAssignedProccessed = true;
   }
   getEmployees(event: LazyLoadEvent) {
     this.emplyeeservice.getEmployesToBesAssigned().subscribe(res => {
@@ -131,10 +147,7 @@ export class GestionContratosComponent implements OnInit {
       });
       this.fromChangeEdit = true;
       this.showLegalperson = false;
-
     }
-
-
   }
   validateForm() {
     this.formcontracts.markAllAsTouched();
@@ -175,20 +188,20 @@ export class GestionContratosComponent implements OnInit {
         console.log(rest);
         rest.forEach(item => item.elementAsArray = item.addededServices ? JSON.parse(item.addededServices) : [])
         this.dataFromdb = rest;
+        this.dataFromdb = rest.filter(item => item.status === 'inactive' || item.status === 'active');
         this.sizeRecords = rest.length;
       }
-
     });
-    if(event){
+    if (event) {
       this.fromPro = event.first;
       this.toPro = event.rows;
     }
     this.agreeService.getAgreementsHIstory(this.fromPro, this.toPro).subscribe(rest => {
-      if(rest){
+      if (rest) {
         this.dataFromdbProcesed = rest.list;
         this.sizeRecordsPro = rest.count;
         this.dataFromdbProcesed.forEach(item => item.employeeAssig != "[]" ? item.elementsAsArray = JSON.parse(item.employeeAssig) : [])
-        console.log('dataFromdb', this.dataFromdbProcesed);
+        console.log('dataFromdbProcesed', this.dataFromdbProcesed);
       }
     });
   }
@@ -214,15 +227,13 @@ export class GestionContratosComponent implements OnInit {
           this.chargeData(null);
         });
       }
-
-
     } else {
       this.messageService.add({ severity: 'error', detail: 'Seleccione un estado diferente a en espera' });
     }
   }
-  getEmployesAndUpdate(seqagree: number, meet: Agreement){
+  getEmployesAndUpdate(seqagree: number, meet: Agreement) {
     this.emplyeeservice.getEmployessAssigned(null, seqagree).subscribe(rest => {
-      if(rest){
+      if (rest) {
         this.saveHistory(rest, meet);
         rest.forEach(item => {
           item.img = this.sharedFuntions.repair(item.img);
@@ -234,18 +245,18 @@ export class GestionContratosComponent implements OnInit {
       }
     })
   }
-  saveHistory(employees: Employee[], meet: Agreement){
-    console.log("employees", employees);
+  saveHistory(employees: Employee[], meet: Agreement) {
     const history: AgreementHistory = this.createHistoryMeet(meet);
-    history.employeeAssig = JSON.stringify(employees.length > 0 ? employees : [] );
+    history.employeeAssig = JSON.stringify(employees.length > 0 ? employees : []);
     this.agreeService.saveAgreementHistory(history).subscribe(rest => {
-      if(rest){
+      if (rest) {
         this.messageService.add({ severity: 'success', detail: 'Historial actualzado' });
-      } else 
-      this.messageService.add({ severity: 'error', detail: 'Error, al actualizar' });
+        this.chargeData(null);
+      } else
+        this.messageService.add({ severity: 'error', detail: 'Error, al actualizar' });
     });
   }
-  createHistoryMeet(agreement: Agreement){
+  createHistoryMeet(agreement: Agreement) {
     const history: AgreementHistory = new AgreementHistory();
     history.seqagreehistory = agreement.seqagree;
     history.ruc = agreement.ruc;
@@ -258,10 +269,11 @@ export class GestionContratosComponent implements OnInit {
     history.dateend = agreement.dateend;
     history.schedule = agreement.schedule;
     history.servicedetail = agreement.servicedetail;
-    history.subtotal = agreement.area;
-    history.area = agreement.legalperson_seqlegalperson;
+    history.subtotal = agreement.subtotal;
+    history.area = agreement.area;
+    history.legalperson_seqlegalperson = agreement.legalperson_seqlegalperson;
     history.addededServices = agreement.addededServices;
-  
+
     history.status = agreement.status;
     return history;
 
@@ -365,9 +377,19 @@ export class GestionContratosComponent implements OnInit {
   onEditContract(dataFrom: Agreement) {
     console.log('On edit', dataFrom);
     this.fromEdit = true;
-    this.activeIndex1 = 1;
+    this.activeIndex1 = 2;
     this.populateDataEdit(dataFrom);
     this.agrrementToUpdate = dataFrom;
+  }
+  cancelEdit() {
+    this.seqLegalperson = 0;
+    this.chargeData(null);
+    this.activeIndex1 = 0;
+    this.fromEdit = false;
+    this.formcontracts.reset();
+    while (this.services.controls.length > 1) {
+      this.deleteService(0);
+    }
   }
   populateDataEdit(data: Agreement) {
     this.formcontracts.patchValue({

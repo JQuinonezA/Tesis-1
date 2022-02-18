@@ -66,16 +66,125 @@
                                 class="p-button-raised p-button-rounded p-button-info" style="float: center">
                             </button>
                         </td>
+                        <td style="text-align: center;">
+                            <button pButton pRipple type="button" icon="pi pi-pencil" (click)="onEditContract(dataFrom)"
+                                class="p-button-rounded p-button-text"></button>
+                        </td>
                         <td style="text-align: center;" NOWRAP>
                             <span class="p-column-title">Procesar</span>
                             <p-dropdown [options]="dropStatus" [(ngModel)]="dataFrom.status" appendTo="body"></p-dropdown>
                             &nbsp;
-                            <button pButton pRipple type="button" icon="pi pi-save" 
+                            <button pButton pRipple type="button" icon="pi pi-save"  (click)="fillDataToUpdate(dataFrom)"
                                 class="p-button-rounded p-button-raised p-button-success"></button>
                         </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="rowexpansion" let-dataFrom>
+                    <tr>
+                        <td colspan="7">
+                            <ng-container *ngIf="dataFrom.elementAsArray?.length > 0">
+                                <span class="p-text-bold">Servicios: </span>
+                                <ul>
+                                    <ng-container *ngFor="let item of dataFrom.elementAsArray">
+                                        <li>
+                                            <span class="p-text-bold">Tipo de servicio: </span>
+                                            {{item.typeService |
+                                            selectedItemPipe:drop}} -
+                                            <span class="p-text-bold">Servicio: </span>
+                                            {{item.serviceName }}
+                                        </li>
+                                    </ng-container>
+                                </ul>
+                            </ng-container>
+                            <ng-container *ngIf="dataFrom.elementAsArray?.length <= 0">
+                                <span class="p-text-bold">Tipo de servicio: </span> <span
+                                    class="p-text-italic">{{dataFrom.typeService | selectedItemPipe:drop}}</span>
+                                <br>
+                                <span class="p-text-bold">Servicio: </span> <span
+                                    class="p-text-italic">{{dataFrom.services}}</span>
+                                <br>
+                            </ng-container>
+                            <span class="p-text-bold">Dirección principal: </span> <span
+                                class="p-text-italic">{{dataFrom.principallocation}}</span>
+                            <br>
+                            <span class="p-text-bold">Dirección del servicio: </span> <span
+                                class="p-text-italic">{{dataFrom.location}}</span>
+                            <br>
+                            <span class="p-text-bold">Teléfono: </span> <span
+                                class="p-text-italic">{{dataFrom.phone}}</span>
+                            <br>
+                            <span class="p-text-bold">Horario: </span> <span
+                                class="p-text-italic">{{dataFrom.schedule}}</span>
+                            <br>
+                            <span class="p-text-bold">Detalle del/los servicios: </span> <span
+                                class="p-text-italic">{{dataFrom.servicedetail}}</span>
+                            <br>
+                            <span class="p-text-bold">Area: </span> <span
+                                class="p-text-italic">{{dataFrom.area}}</span>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    No hay registros que mostrar
+                </ng-template>
+            </p-table>
+        </p-tabPanel>
+        <p-tabPanel header="Contratos procesados">
+            <p-table [value]="dataFromdbProcesed" styleClass="p-datatable-customers p-datatable-gridlines p-datatable-striped"
+                [responsive]="true" [paginator]="true" [rows]="pageSize" dataKey="seqagree"
+                [rowsPerPageOptions]="[10,30,60]" [totalRecords]="sizeRecordsPro" [lazy]="true" [autoLayout]="true"
+                selectionMode="single" [columns]="colsProcessed" (onLazyLoad)="chargeData($event)">
+                <ng-template pTemplate="caption">
+                    Listado
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th>Detalle</th>
+                        <ng-container *ngFor="let col of columns">
+                            <th NOWRAP>
+                                {{col.header}}
+                            </th>
+                        </ng-container>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-dataFrom let-index="rowIndex" let-columns="columns"
+                    let-expanded="expanded">
+                    <tr>
+                        <td>
+                            <button type="button" pButton pRipple [pRowToggler]="dataFrom"
+                                class="p-button-text p-button-rounded p-button-plain"
+                                [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'">
+                            </button>
+                        </td>
+                        <td>
+                            <span class="p-column-title">Código contrato</span>
+                            {{dataFrom.seqagreehistory}}
+                        </td>
+                        <td>
+                            <span class="p-column-title">Fecha inicio</span>
+                            {{dataFrom.datestart | date:'dd/MM/yyyy'}}
+                        </td>
+                        <td>
+                            <span class="p-column-title">Fecha fin</span>
+                            {{dataFrom.dateend | date:'dd/MM/yyyy'}}
+                        </td>
+                        <td>
+                            <span class="p-column-title">Nombre empresa</span>
+                            {{dataFrom.name}}
+                        </td>
+                        <td>
+                            <span class="p-column-title">Responsable empresa</span>
+                            {{dataFrom.legalperson_seqlegalperson | personaLegal:dropLegalperson}}
+                        </td>
+                        <td>
+                            <span class="p-column-title">Estado</span>
+                            {{dataFrom.status | selectedItemPipe:dropStatus}}
+                        </td>
                         <td style="text-align: center;">
-                            <button pButton pRipple type="button" icon="pi pi-pencil" (click)="onEditContract(dataFrom)"
-                                class="p-button-rounded p-button-text"></button>
+                            <button pButton pRipple type="button" icon="pi pi-eye"
+                                (click)="onRowSelectAssigned(dataFrom)" (click)="showAssignatedProcessed(dataFrom)"
+                                class="p-button-raised p-button-rounded p-button-help" style="float: center">
+                            </button>
                         </td>
                     </tr>
                 </ng-template>
@@ -383,9 +492,13 @@
                 </div>
                 <p-toolbar>
                     <div class="p-toolbar-group-left">
+                        <button *ngIf="fromEdit" pButton pRipple type="button" label="Cancelar" icon="pi pi-times"
+                            class="p-button-raised p-button-rounded p-button-warning p-mr-2 p-mb-2 "
+                            (click)="cancelEdit()" style="float: right">
+                        </button>
                     </div>
                     <div class="p-toolbar-group-right">
-                        <button pButton pRipple type="button" label="Agregar" icon="pi pi-save"
+                        <button pButton pRipple type="button" [label]=" !fromEdit ? 'Agregar' : 'Guardar edición'" icon="pi pi-save"
                             class="p-button-raised p-button-rounded p-button-success p-mr-2 p-mb-2 "
                             (click)="validateForm()" style="float: right">
                         </button>
@@ -481,5 +594,36 @@
     <p-dialog header="Asignacion de representante" [(visible)]="showLegalperson" [style]="{width: '50vw'}"
         [style]="{width: '50vw'}">
         <app-legalperson (legalData)="getLegal($event)"></app-legalperson>
+    </p-dialog>
+    <p-dialog header="Empleados que laborarón" [(visible)]="showEmployesAssignedProccessed">
+        <p-table [value]="historyAgreement.elementsAsArray" styleClass="p-datatable-customers p-datatable-gridlines p-datatable-striped"
+            [responsive]="true" [paginator]="true" [rows]="pageSize" dataKey="seqemploy"
+            [rowsPerPageOptions]="[10,30,60]" [totalRecords]="sizeRecordsAsigned" [lazy]="true" [autoLayout]="true"
+            [columns]="colsEmployees">
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <ng-container *ngFor="let col of columns">
+                        <th>
+                            {{col.header}}
+                        </th>
+                    </ng-container>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-dataFrom let-index="rowIndex" let-columns="columns">
+                <tr>
+                    <td>
+                        <span class="p-column-title">Nombre</span>
+                        {{dataFrom.name}} - {{dataFrom.lastname}}
+                    </td>
+                    <td>
+                        <span class="p-column-title">Cargo</span>
+                        {{dataFrom.position}}
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                No hay registros que mostrar
+            </ng-template>
+        </p-table>
     </p-dialog>
 </p-card>

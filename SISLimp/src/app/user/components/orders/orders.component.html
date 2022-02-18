@@ -10,12 +10,15 @@
                     <span style="font-weight: bolder; color: black;">{{item?.dateCreate | date:'dd/MM/yyyy'}}</span>
                 </ng-template>
                 <ng-template pTemplate="content">
-                    <h6 style="color: #5252e4; font-style: italic;">Articulos/Servicios solicitados</h6>
+                    <h6 style="color: #023365; font-style: italic;">Articulos/Servicios solicitados</h6>
                     <ul *ngFor="let data of item?.elementAsArray">
                         <li class="p-2">
-                            <span>Nombre: {{data?.name}}</span>
-                            <br>
-                            <span> Descripción:{{data?.description}}</span>
+                            <p-card styleClass="p-shadow-5"
+                                [style]="{'border-radius': '20px', 'background-color':'#00E6B2', 'font-size':'.95rem'}">
+                                <span>Nombre: {{data?.name}}</span>
+                                <br>
+                                <span> Descripción:{{data?.description}}</span>
+                            </p-card>
                         </li>
                     </ul>
                 </ng-template>
@@ -24,7 +27,8 @@
                         <div class="p-col-6">
                         </div>
                         <div class="p-col-6" style="text-align: end;">
-                            <p-tag styleClass="p-mr-2" icon="pi pi-info-circle" [severity]="item?.status == 'cancel' ? 'danger' : 'info'" [rounded]="true">
+                            <p-tag styleClass="p-mr-2" icon="pi pi-info-circle"
+                                [severity]="item?.status == 'cancel' ? 'danger' : 'info'" [rounded]="true">
                                 {{item?.status | solistatus:drop}}
                             </p-tag>
                         </div>
