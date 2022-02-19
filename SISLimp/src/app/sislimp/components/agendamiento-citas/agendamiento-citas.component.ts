@@ -111,13 +111,9 @@ export class AgendamientoCitasComponent implements OnInit {
       if (rest.length > 0) {
         rest.forEach(item => item.elementAsArray = item.addededServices ? JSON.parse(item.addededServices) : [])
         this.dataFromdb = rest.filter(item => item.status === 'process' || item.status === 'hold');
-        //this.dataFromdbProcesed = rest.filter(item => item.status !== 'process' && item.status !== 'hold');
         this.dataFromdb.forEach(item => this.completeCityDrop(item.cliProvince, 'dataFromdb'));
-        //this.dataFromdbProcesed.forEach(item => this.completeCityDrop(item.cliProvince, 'dataFromdbProcesed'));
         console.log('dataFromdb', this.dataFromdb);
-
       }
-
     });
     if (event) {
       this.fromPro = event.first;

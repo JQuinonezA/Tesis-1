@@ -78,10 +78,14 @@
         </ng-template>
     </p-table>
     <p-toolbar>
-        <div class="p-toolbar-group-left"></div>
-        <div class="p-toolbar-group-right">
-            <button pButton pRipple type="button" label="Regresar" icon="pi pi-chevron-left"
+        <div class="p-toolbar-group-left">
+            <button pButton pRipple type="button" label="Cancelar generación" icon="pi pi-chevron-left" (click)="outFromHere()"
                 class="p-button-raised p-button-rounded p-button-danger p-mr-2 p-mb-2 ">
+            </button>
+        </div>
+        <div class="p-toolbar-group-right">
+            <button pButton pRipple type="button" label="Generar" icon="pi pi-save"
+                class="p-button-raised p-button-rounded p-button-success p-mr-2 p-mb-2 ">
             </button>
         </div>
     </p-toolbar>

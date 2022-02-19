@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { LazyLoadEvent } from 'primeng/api';
 
 @Component({
@@ -8,6 +8,7 @@ import { LazyLoadEvent } from 'primeng/api';
 })
 export class DetailserviceComponent implements OnInit {
 
+  @Output() outValue: EventEmitter<boolean> = new EventEmitter();
   cols: any[];
   dataFromdb: any[] = [];
   sizeRecords: number = 50;
@@ -41,6 +42,9 @@ export class DetailserviceComponent implements OnInit {
       {codeService: '6566565', date: '18/12/2021', nameemplyee: 'Pepe', client: 'Arana', assigmenthour: '10 am' ,status: 'COMPLETADO',duration: '3 meses', price: 1622.00},
       {codeService: '6566565', date: '20/12/2021', nameemplyee: 'Jose', client: 'Arana', assigmenthour: '10 am' ,status: 'PENDIENTE',duration: '2 horas', price: 1622.00},
     ]
+  }
+  outFromHere(){
+    this.outValue.emit(true);
   }
 
 }

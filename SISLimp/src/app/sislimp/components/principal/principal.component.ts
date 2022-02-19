@@ -34,7 +34,7 @@ export class PrincipalComponent implements OnInit {
       {
         label: 'Citas',
         icon: 'pi pi-fw pi-tags',
-        style: 'font-size: 0.9rem !important',
+        
         items: [
           {
             label: 'Angendamiento de citas',
@@ -62,7 +62,7 @@ export class PrincipalComponent implements OnInit {
       {
         label: 'Catálogos',
         icon:'fa fa-cubes',
-        style: 'font-size: 0.9rem !important',
+        
         items: [
           {
             label: 'Catálogo de servicios',
@@ -80,7 +80,7 @@ export class PrincipalComponent implements OnInit {
         
         label: 'Empleados y proveerdores',
         icon:'fa fa-users',
-        style: 'font-size: 0.9rem !important',
+        
         items: [
           {
             label: 'Gestión de empleados',
@@ -102,7 +102,7 @@ export class PrincipalComponent implements OnInit {
       {
         label: 'Gestión de inventario',
         icon:'pi pi-book',
-        style: 'font-size: 0.9rem !important',
+        
         items: [
           {
             label: 'Productos',
@@ -114,7 +114,7 @@ export class PrincipalComponent implements OnInit {
       {
         label: 'Calendario',
         icon:' pi pi-calendar-plus',
-        style: 'font-size: 0.9rem !important',
+        
         items: [
           {
             label: 'Gestión de horarios',

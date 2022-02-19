@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { UserGeneralModel } from 'src/app/sharedAll/models/usergeneral.model';
 import { AuthService } from 'src/app/sharedAll/serviceShared/auth.service';
 import { FuntionsSharedService } from 'src/app/sharedAll/serviceShared/funtions-shared.service';
 import { CatProducts } from 'src/app/sislimp/shared/models/catproduct.model';
@@ -48,8 +47,6 @@ export class ProductsComponent implements OnInit {
     } else {
       this.cart = [...this.cart, this.productSelected];
     }
-    // console.log("exist",exist);
-    // console.log("this.cart",this.cart);
   }
 
   quitProduct(idPRod: number) {
@@ -90,13 +87,10 @@ export class ProductsComponent implements OnInit {
     });
   }
   sentProducts() {
-    console.log("cart", this.cart);
     this.fillData(this.cart);
   }
   findExtraData() {
-    console.log('this.authService.codeUser', this.authService.codeUser);
     this.userService.getUserExtraData(this.authService.codeUser).then(rest => {
-      console.log("USER  SEARCHED", rest);
       this.phoneNumberUser = rest.phonenumber;
       this.emailUser = rest.email;
     });

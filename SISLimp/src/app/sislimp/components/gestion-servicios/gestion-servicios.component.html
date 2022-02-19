@@ -1,78 +1,340 @@
-<ng-container *ngIf="!showDetail">
-    <div class="p-mb-3 p-text-italic">
-        <h3>Gestión de servicios</h3>
-    </div>
-    <p-card>
-        <p-table [value]="dataFromdb" selectionMode="single" styleClass="p-datatable-customers p-datatable-gridlines p-datatable-striped"
-            [responsive]="true" [paginator]="true" [rows]="pageSize" dataKey="codeCita" [rowsPerPageOptions]="[10,30,60]"
-            [totalRecords]="sizeRecords" [lazy]="true" [autoLayout]="true" [columns]="cols" (onLazyLoad)="chargeData($event)"
-            (onRowSelect)="onRowSelect($event)">
-            <ng-template pTemplate="caption">
-                Listado de servicios
-            </ng-template>
-            <ng-template pTemplate="header" let-columns>
-                <tr>
-                    <ng-container *ngFor="let col of columns">
-                        <th>
-                            {{col.header}}
-                        </th>
-                    </ng-container>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-dataFrom let-index="rowIndex" let-columns="columns">
-                <tr [pSelectableRow]="dataFrom">
-                    <td>
-                        <span class="p-column-title">Código cita</span>
-                        {{dataFrom.codeCita}}
-                    </td>
-                    <td>
-                        <span class="p-column-title">Fecha</span>
-                        {{dataFrom.date}}
-                    </td>
-                    <td>
-                        <span class="p-column-title">Nombre empleado</span>
-                        {{dataFrom.nameemplyee}}
-                    </td>
-                    <td>
-                        <span class="p-column-title">Cliente</span>
-                        {{dataFrom.client}}
-                    </td>
-                    <td>
-                        <span class="p-column-title">Hora asignada</span>
-                        {{dataFrom.assigmenthour}}
-                    </td>
-                    <td>
-                        <span class="p-column-title">Estado</span>
-                        {{dataFrom.status}}
-                    </td>
-                    <td>
-                        <span class="p-column-title">Duración</span>
-                        {{dataFrom.duration}}
-                    </td>
-                    <td>
-                        <span class="p-column-title">Precio</span>
-                        {{dataFrom.price}}
-                    </td>
-                    <td>
-                        <span class="p-column-title">Seq. servicio</span>
-                        {{dataFrom.seqservice}}
-                    </td>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="emptymessage">
-                No hay registros que mostrar
-            </ng-template>
-        </p-table>
+<p-toast></p-toast>
+<div class="p-mb-3 p-text-italic">
+    <h3>Gestión de servicios solicitados</h3>
+</div>
+<p-card>
+    <p-table [value]="dataFromdb" selectionMode="single"
+        styleClass="p-datatable-customers p-datatable-gridlines p-datatable-striped" [responsive]="true"
+        [paginator]="true" [rows]="pageSize" dataKey="seqsolservice" [rowsPerPageOptions]="[10,30,60]"
+        [totalRecords]="sizeRecords" [lazy]="true" [autoLayout]="true" [columns]="cols"
+        (onLazyLoad)="chargeData($event)">
+        <ng-template pTemplate="caption">
+            Listado de servicios
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <ng-container *ngFor="let col of columns">
+                    <th NOWRAP>
+                        {{col.header}}
+                    </th>
+                </ng-container>
+                <th NOWRAP>Generar/Ignorar cita</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-dataFrom let-index="rowIndex" let-columns="columns">
+            <tr [pSelectableRow]="dataFrom">
+                <td>
+                    <button type="button" pButton pRipple [pRowToggler]="dataFrom"
+                        class="p-button-text p-button-rounded p-button-plain"
+                        [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'">
+                    </button>
+                </td>
+                <td>
+                    <span class="p-column-title">Código solicitud</span>
+                    {{dataFrom.seqsolservice}}
+                </td>
+                <td>
+                    <span class="p-column-title">Fecha</span>
+                    {{dataFrom.dateCreate | date:'dd/MM/yyyy'}}
+                </td>
+                <td>
+                    <span class="p-column-title">Estado</span>
+                    {{dataFrom.status}}
+                </td>
+                <td>
+                    <span class="p-column-title">Cliente</span>
+                    {{dataFrom.nameuser}}
+                </td>
+                <td>
+                    <span class="p-column-title">Teléfono</span>
+                    {{dataFrom.contacnumber}}
+                </td>
+                <td>
+                    <span class="p-column-title">Correo electrónico</span>
+                    {{dataFrom.email}}
+                </td>
+                <td style="text-align: center;">
+                    <button pButton pRipple type="button" icon="pi pi-calendar-plus" (click)="onRowSelect(dataFrom)"
+                        class="p-button-rounded  p-button-raised p-button-text p-button-info p-mr-2 p-mb-2 ">
+                    </button>
+                    &nbsp;
+                    <button pButton pRipple type="button" icon="pi pi-trash" (click)="onRowSelectEliminated(dataFrom)"
+                        class="p-button-rounded  p-button-raised p-button-text p-button-danger p-mr-2 p-mb-2 ">
+                    </button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="rowexpansion" let-dataFrom>
+            <tr>
+                <td colspan="7">
+
+                    <span class="p-text-bold">Servicios: </span>
+                    <ul>
+                        <ng-container *ngFor="let item of dataFrom.elementAsArray">
+                            <li>
+                                <span class="p-text-bold">Tipo de servicio: </span>
+                                {{item.type |
+                                selectedItemPipe:dropType}} -
+                                <span class="p-text-bold">Servicio: </span>
+                                {{item.nameservice }}
+                            </li>
+                        </ng-container>
+                    </ul>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            No hay registros que mostrar
+        </ng-template>
+    </p-table>
+    <p-dialog header="Formulario de citas" [(visible)]="showDetail"  [style]="{width: '550px'}" modal="true">
+            <form [formGroup]="formCita" (ngSubmit)="validateForm()">
+                <div class="p-fluid p-grid">
+                    <div class="p-field p-col-12 p-md-6">
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">
+                                <i class="pi pi-user"></i>
+                            </span>
+                            <span class="p-float-label">
+                                <input type="text" id="inputgroup" pInputText formControlName="name">
+                                <label for="inputgroup">Nombre</label>
+                            </span>
+                        </div>
+                        <small *ngIf="formCita.get('name')?.errors && (formCita.get('name')?.dirty ||
+                            formCita.get('name')?.touched)" class="p-error block">
+                            <small *ngIf="formCita.get('name').errors?.required">
+                                Requerido
+                            </small>
+                        </small>
+                    </div>
+                    <div class="p-field p-col-12 p-md-6">
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">
+                                <i class="pi pi-user"></i>
+                            </span>
+                            <span class="p-float-label">
+                                <input type="text" id="inputgroup" pInputText formControlName="lastname">
+                                <label for="inputgroup">Apellido</label>
+                            </span>
+                        </div>
+                        <small *ngIf="formCita.get('lastname')?.errors && (formCita.get('lastname')?.dirty ||
+                            formCita.get('lastname')?.touched)" class="p-error block">
+                            <small *ngIf="formCita.get('lastname').errors?.required">
+                                Requerido
+                            </small>
+                        </small>
+                    </div>
+                    <div class="p-field p-col-12 p-md-6">
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">
+                                <i class="pi pi-id-card"></i>
+                            </span>
+                            <span class="p-float-label">
+                                <input type="text" id="inputgroup" pInputText formControlName="dni" maxlength="10"
+                                    (keypress)="sharedFuntions.enterOnlyNumbers($event)">
+                                <label for="inputgroup">Cedula</label>
+                            </span>
+                        </div>
+                        <small *ngIf="formCita.get('dni')?.errors && (formCita.get('dni')?.dirty ||
+                            formCita.get('dni')?.touched)" class="p-error block">
+                            <small *ngIf="formCita.get('dni').errors?.required">
+                                Requerido
+                            </small>
+                        </small>
+                    </div>
+                    <div class="p-field p-col-12 p-md-6">
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">
+                                <i class="pi pi-phone"></i>
+                            </span>
+                            <span class="p-float-label">
+                                <input type="text" id="inputgroup" pInputText formControlName="phone" maxlength="10"
+                                    (keypress)="sharedFuntions.enterOnlyNumbers($event)">
+                                <label for="inputgroup">Telefono</label>
+                            </span>
+                        </div>
+                        <small *ngIf="formCita.get('phone')?.errors && (formCita.get('phone')?.dirty ||
+                            formCita.get('phone')?.touched)" class="p-error block">
+                            <small *ngIf="formCita.get('phone').errors?.required">
+                                Requerido
+                            </small>
+                        </small>
+                    </div>
+                    <div class="p-field p-col-12 p-md-6">
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">
+                                <i class="pi pi-envelope "></i>
+                            </span>
+                            <span class="p-float-label">
+                                <input type="text" id="inputgroup" pInputText formControlName="email">
+                                <label for="inputgroup">Correo electrónico</label>
+                            </span>
+                        </div>
+                        <small *ngIf="formCita.get('email')?.errors && (formCita.get('email')?.dirty ||
+                            formCita.get('email')?.touched)" class="p-error block">
+                            <small *ngIf="formCita.get('email').errors?.required">
+                                Requerido
+                            </small>
+                            <small *ngIf="formCita.get('email').errors?.mustMatch">
+                                {{formCita.get('email').errors?.mustMatch}}
+                            </small>
+                        </small>
+                    </div>
+                    <div class="p-field p-col-12 p-md-6"></div>
+                    <div class="p-field p-col-12 p-md-6">
+                        <span for="dropdown">Provincia</span>
+                        <p-dropdown [options]="dropProvince" (onChange)="onChangueProvince($event)"
+                            formControlName="province" appendTo="body"></p-dropdown>
+                        <small *ngIf="formCita.get('province')?.errors && (formCita.get('province')?.dirty ||
+                            formCita.get('province')?.touched)" class="p-error block">
+                            <small *ngIf="formCita.get('province').errors?.required">
+                                Requerido
+                            </small>
+                        </small>
+                    </div>
+                    <div class="p-field p-col-12 p-md-6">
+                        <span for="dropdown">Ciudad</span>
+                        <p-dropdown [options]="dropCity" formControlName="city" appendTo="body"></p-dropdown>
+                        <small *ngIf="formCita.get('city')?.errors && (formCita.get('city')?.dirty ||
+                            formCita.get('city')?.touched)" class="p-error block">
+                            <small *ngIf="formCita.get('city').errors?.required">
+                                Requerido
+                            </small>
+                        </small>
+                    </div>
+                    <div class="p-field p-col-12 p-md-12">
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">
+                                <i class="pi pi-globe"></i>
+                            </span>
+                            <span class="p-float-label">
+                                <textarea id="float-input" rows="5" cols="30" pInputTextarea
+                                    formControlName="address"></textarea>
+                                <label for="inputgroup">Dirección detallada</label>
+                            </span>
+                        </div>
+                        <small *ngIf="formCita.get('address')?.errors && (formCita.get('address')?.dirty ||
+                            formCita.get('address')?.touched)" class="p-error block">
+                            <small *ngIf="formCita.get('address').errors?.required">
+                                Requerido
+                            </small>
+                        </small>
+                    </div>
+                    <button pButton pRipple type="button" icon="pi pi-plus" (click)="addService()"
+                        class="p-button-raised p-button-rounded p-button-success mb-3">
+                    </button>
+                    <div class="p-field p-col-12 p-md-12 pt-1">
+                        <ng-container formArrayName="services">
+                            <ng-container *ngFor="let serviceForm of services.controls; let i = index">
+                                <div class="p-grid p-fluid p-0 m-0" [formGroup]="serviceForm">
+                                    <div class="p-field p-col-12 p-md-6">
+                                        <label style="font-size: 12px; top: -.75;" class="m-0 p-0">Tipo servicio</label>
+                                        <p-dropdown [options]="dropType" formControlName="typeService" appendTo="body"></p-dropdown>
+                                        <small *ngIf="serviceForm.get('typeService')?.errors && (serviceForm.get('typeService')?.dirty ||
+                                                        serviceForm.get('typeService')?.touched)"
+                                            class="p-error block">
+                                            <small *ngIf="serviceForm.get('typeService').errors?.required">
+                                                Requerido
+                                            </small>
+                                        </small>
+                                    </div>
+                                    <div class="p-field p-col-12 p-md-6">
+                                        <label style="font-size: 12px; top: -.75;" class="m-0 p-0">Nombre
+                                            servicio
+                                        </label>
+                                        <div class="p-inputgroup">
+                                            <span class="p-inputgroup-addon">
+                                                <i class="pi pi-lock"></i>
+                                            </span>
+                                            <input type="text" pInputText formControlName="serviceName" />
+                                            &nbsp;
+                                            <button pButton pRipple type="button" icon="pi pi-trash"
+                                                (click)="deleteService(i)"
+                                                class="p-button-raised p-button-rounded p-button-danger p-0 m-0">
+                                            </button>
+                                        </div>
+                                        <small *ngIf="serviceForm.get('serviceName')?.errors && (serviceForm.get('serviceName')?.dirty ||
+                                                        serviceForm.get('serviceName')?.touched)"
+                                            class="p-error block">
+                                            <small *ngIf="serviceForm.get('serviceName').errors?.required">
+                                                Requerido
+                                            </small>
+                                        </small>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                        &nbsp;
+                    </div>
+                    <div class="p-field p-col-12 p-md-6">
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">
+                                <i class="pi pi-lock"></i>
+                            </span>
+                            <span class="p-float-label">
+                                <input type="number" id="inputgroup" pInputText formControlName="hoursNumber" />
+                                <label for="inputgroup">Num. Horas</label>
+                            </span>
+                        </div>
+                        <small *ngIf="formCita.get('hoursNumber')?.errors && (formCita.get('hoursNumber')?.dirty ||
+                            formCita.get('hoursNumber')?.touched)" class="p-error block">
+                            <small *ngIf="formCita.get('hoursNumber').errors?.required">
+                                Requerido
+                            </small>
+                        </small>
+                    </div>
+                    <div class="p-field p-col-12 p-md-6">
+                        <span class="p-float-label">
+                            <p-dropdown [options]="dropTools" formControlName="tools" appendTo="body"></p-dropdown>
+                            <label for="dropdown">Utencilios</label>
+                        </span>
+                        <small *ngIf="formCita.get('tools')?.errors && (formCita.get('tools')?.dirty ||
+                            formCita.get('tools')?.touched)" class="p-error block">
+                            <small *ngIf="formCita.get('tools').errors?.required">
+                                Requerido
+                            </small>
+                        </small>
+                    </div>
+                    <div class="p-field p-col-12 p-md-6">
+                        <span class="p-float-label">
+                            <p-calendar [showIcon]="true" inputId="icon" formControlName="dateService"></p-calendar>
+                            <label for="inputgroup">Fecha inicio</label>
+                        </span>
+                        <small *ngIf="formCita.get('dateService')?.errors && (formCita.get('dateService')?.dirty ||
+                            formCita.get('dateService')?.touched)" class="p-error block">
+                            <small *ngIf="formCita.get('dateService').errors?.required">
+                                Requerido
+                            </small>
+                        </small>
+                    </div>
+                    <div class="p-field p-col-12 p-md-6">
+                        <span class="p-float-label">
+                            <p-calendar [showIcon]="true" inputId="icon" formControlName="dateEnd"></p-calendar>
+                            <label for="inputgroup">Fecha fin</label>
+                        </span>
+                        <small *ngIf="formCita.get('dateEnd')?.errors && (formCita.get('dateEnd')?.dirty ||
+                            formCita.get('dateEnd')?.touched)" class="p-error block">
+                            <small *ngIf="formCita.get('dateEnd').errors?.required">
+                                Requerido
+                            </small>
+                        </small>
+                    </div>
+                </div>
+            </form>
         <p-toolbar>
-            <div class="p-toolbar-group-left"></div>
+            <div class="p-toolbar-group-left">
+                <button pButton pRipple type="button" label="Cancelar" icon="pi pi-info-circle" (click)="outFrom()"
+                    class="p-button-raised p-button-rounded p-button-warning p-mr-2 p-mb-2 ">
+                </button>
+            </div>
             <div class="p-toolbar-group-right">
-                <button pButton pRipple type="button" label="Registrar nueva" icon="pi pi-plus"
+                <button pButton pRipple type="button" label="Generar" icon="pi pi-save" (click)="validateForm()"
                     class="p-button-raised p-button-rounded p-button-success p-mr-2 p-mb-2 ">
                 </button>
             </div>
         </p-toolbar>
-    </p-card>
-</ng-container>
-<ng-container *ngIf="showDetail">
-    <app-detailservice></app-detailservice>
-</ng-container>
+    </p-dialog>
+</p-card>
+<!-- <ng-container *ngIf="showDetail">
+    <app-detailservice (outValue)="outFrom($event)"></app-detailservice>
+</ng-container> -->

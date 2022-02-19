@@ -104,7 +104,6 @@ export class RequestsAllComponent implements OnInit {
 
 
   onRowSelect(event: any) {
-    // event.data.assigmentdayte = this.selectedFather.datestart;
     this.selectdProducts.push(event.data);
   }
   onRowUnselectChild(event: any) {
@@ -190,9 +189,7 @@ export class RequestsAllComponent implements OnInit {
         productsQuantity = [...productsQuantity, ...this.transformFromJSON(item.products)];
         item.elementAsArray = await this.getProductsRelated(productsQuantity);
       });
-      // this.dataFromdb = rest;
       this.dataFromdb = rest.filter(item => item.status == 'process' || item.status == 'hold');
-      // this.dataFromdb.forEach(item => item.products = '');
       this.dataFromdbWatch = rest.filter(item => item.status != 'process' && item.status != 'hold');
     });
   }
