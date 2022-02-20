@@ -61,6 +61,7 @@ export class AuthService {
     localStorage.setItem('username', username);
     localStorage.setItem('code', code + "");
     this.codeUser = Number(localStorage.getItem('code'));
+    this.username = localStorage.getItem('username');
   }
   private handleError(error): Observable<never> {
 

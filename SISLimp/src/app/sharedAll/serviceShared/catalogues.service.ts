@@ -32,7 +32,7 @@ export class CataloguesService {
 
   constructModel(list: any) {
     const comboItems: SelectItem[] = [];
-    comboItems.push({ label: 'Seleccione', value: null });
+    comboItems.push({ label: 'Seleccione', value: '' });
     return comboItems.concat(list.map(value => ({
       label: value.decription,
       value: value.nameItem.toString()

@@ -12,6 +12,7 @@ import { GestionProvedoresComponent } from './components/gestion-provedores/gest
 import { GestionServiciosComponent } from './components/gestion-servicios/gestion-servicios.component';
 import { PrincipalComponent } from './components/principal/principal.component';
 import { RequestsAllComponent } from './components/requests-all/requests-all.component';
+import { UsersManagementComponent } from './components/users-management/users-management.component';
 const routes: Routes = [
   {
     path: '', component: PrincipalComponent, children:[
@@ -26,6 +27,7 @@ const routes: Routes = [
       {path: 'inventory/products', component: GestionInventarioProductsComponent},
       {path: 'schedule', component: CalendarAllComponent},
       {path: 'solmanagement', component: RequestsAllComponent},
+      {path: 'users', component: UsersManagementComponent},
       { path: '**', redirectTo: 'booking' },
       
     ]

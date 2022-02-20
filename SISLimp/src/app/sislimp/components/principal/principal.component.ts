@@ -27,7 +27,7 @@ export class PrincipalComponent implements OnInit {
   ngOnInit() {
     this.items = [
       {
-        label: this.nombre
+        label: this.authService.username
       }
     ]
     this.items2 = [
@@ -122,7 +122,19 @@ export class PrincipalComponent implements OnInit {
             routerLink: ['/system/schedule']
           }
         ]
-      }
+      },
+      {
+        label: 'Usuarios',
+        icon:'pi pi-users',
+        
+        items: [
+          {
+            label: 'Gestión de usuarios',
+            icon: 'pi pi-user',
+            routerLink: ['/system/users']
+          }
+        ]
+      },
     ];
     this.loadStyle();
   }

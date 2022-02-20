@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 import { map } from 'rxjs/operators';
 import { LoginUser, UserGeneralModel } from 'src/app/sharedAll/models/usergeneral.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +15,14 @@ export class UsersGeneralService {
   ) {
     this.url = environment.API_URL;
   }
-
+  
   getUserExtraData(id: number): Promise<UserGeneralModel> {
     let urlsend = this.url + `/users/${id.toString()}`;
     return this._http.get<UserGeneralModel>(urlsend).pipe(map(rest => rest as UserGeneralModel)).toPromise();
+  }
+  getUsers(role: string): Promise<any> {
+    let urlsend = this.url + `/users/${role}`;
+    return this._http.get<any>(urlsend).pipe(map(rest => rest as any)).toPromise();
   }
   saveUser(container: UserGeneralModel): Promise<UserGeneralModel> {
     let urlsend = this.url + '/saveNewUser';
@@ -35,5 +40,10 @@ export class UsersGeneralService {
   updateLoginUSer(container: LoginUser): Promise<LoginUser>{
     let urlsend = this.url + '/updateLoginUSer';
     return this._http.post<LoginUser>(urlsend, container).pipe(map(rest => rest as LoginUser)).toPromise();
+  }
+
+  deleteUSer(sequser: number): Observable<any>{
+    let url = this.url + `/users/${sequser}`;
+    return this._http.delete(url).pipe(map( res => res as any));
   }
 }
