@@ -65,6 +65,7 @@ import en from '@angular/common/locales/es';
 import { NZ_I18N, en_US } from 'ng-zorro-antd/i18n';
 import { PersonaLegalPipe } from './shared/pipes/persona-legal.pipe';
 import { UsersManagementComponent } from './components/users-management/users-management.component';
+import { LoginUserPipe } from './shared/pipes/login-user.pipe';
 registerLocaleData(en);
 
 
@@ -100,6 +101,7 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     ForCityPipe,
     PersonaLegalPipe,
     UsersManagementComponent,
+    LoginUserPipe,
   ],
   imports: [
     CommonModule,

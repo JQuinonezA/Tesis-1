@@ -55,7 +55,6 @@ export class AuthService {
     // setear userlogged = isExpired
   }
   private saveToken(token: string, role: string, code: number, username: string) {
-    console.warn(code);
     localStorage.setItem('token', token);
     localStorage.setItem('role', role);
     localStorage.setItem('username', username);

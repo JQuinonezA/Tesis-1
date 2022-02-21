@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { MessageService, SelectItem } from 'primeng/api';
 import { LoginUser, UserGeneralModel } from 'src/app/sharedAll/models/usergeneral.model';
 import { AuthService } from 'src/app/sharedAll/serviceShared/auth.service';
 import { UsersGeneralService } from './users-general.service';
-
+import { FuntionsSharedService } from '../../../sharedAll/serviceShared/funtions-shared.service';
+import { CataloguesService } from '../../../sharedAll/serviceShared/catalogues.service';
+const CITYCAT = 'CITYCAT';
+const PROVINCECAT = 'PROVINCECAT';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -16,39 +19,64 @@ export class LoginComponent implements OnInit {
   active;
   formLogin: FormGroup = new FormGroup({});
   formNewUser: FormGroup = new FormGroup({});
+  formPassword: FormGroup = new FormGroup({});
   cities: any[] = [];
   provinces: any[] = [];
   newUSer: UserGeneralModel = new UserGeneralModel();
   loginUser: LoginUser = new LoginUser();
   loginuser_codeuser: number = 0;
+  dropCity: SelectItem[] = [];
+  dropProvince: SelectItem[] = [];
+  codeUser: number;
+  mustChange: boolean;
+  loginUserUpdate: LoginUser = new LoginUser();
+  showChangePass: boolean = false;
   constructor(
     private loginService: AuthService,
     private userGeneralService: UsersGeneralService,
     private formBuilder: FormBuilder,
     private router: Router,
     private messageService: MessageService,
-  ) { }
+    public sharedFuntions: FuntionsSharedService,
+    private catalogueService: CataloguesService,
+
+  ) {
+    this.codeUser = this.loginService.codeUser;
+  }
 
   ngOnInit() {
     this.active = 1;
     this.construcForm();
-    this.cities = [
-      { name: 'Ciudad 1', code: 1 },
-      { name: 'Ciudad 2', code: 2 },
-      { name: 'Ciudad 3', code: 3 },
-    ]
-    this.provinces = [
-      { name: 'Provincia 1', code: 1 },
-      { name: 'Provincia 2', code: 2 },
-      { name: 'Provincia 3', code: 3 },
-    ]
-    console.log(this.cities);
+    this.getCatalogues();
+  }
+
+  async getCatalogues() {
+    await this.catalogueService.getCataloguebyCodeCat(PROVINCECAT).then(rest => {
+      this.provinces = this.catalogueService.constructModel(rest);
+    });
+  }
+  onChangueProvince(event: any) {
+    if (event) {
+      if (event.target.value) {
+        this.catalogueService.getCataloguebyCodeCatAndCodeFather(CITYCAT, PROVINCECAT, event.target.value).then(rest => {
+          this.cities = this.catalogueService.constructModel(rest);
+        });
+      } else {
+        this.cities = []
+      }
+    }
+
+
   }
   construcForm() {
     this.formLogin = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
+    this.formPassword = this.formBuilder.group({
+      newpassword: ['', Validators.required],
+      repassword: ['', Validators.required]
+    }, { validator: this.MustMatch("newpassword", "repassword") });
     this.formNewUser = this.formBuilder.group({
       name: ['', Validators.required],
       lastname: ['', Validators.required],
@@ -59,20 +87,64 @@ export class LoginComponent implements OnInit {
       password: ['', Validators.required],
       passwordConfirmation: ['', Validators.required],
       conditions: ['', Validators.required]
-    }, { validator: this.MustMatch("password", "passwordConfirmation") })
+    }, {
+      validators: [this.MustMatch("password", "passwordConfirmation"),
+      this.sharedFuntions.validateUsername('email')]
+    })
   }
-  onLogin() {
+  async onLogin() {
     this.formLogin.markAllAsTouched();
     if (!this.formLogin.valid) {
       this.messageService.add({ severity: 'error', detail: 'Ingrese usuario y contraseña' });
       console.log('FORM', this.formLogin.value);
     } else {
-      this.loginService.login(this.formLogin.value).subscribe(rest => {
+      this.loginService.login(this.formLogin.value).subscribe(async rest => {
         if (rest) {
-          this.router.navigate(['user']);
+          await this.prevalidatePassword(this.codeUser);
+          if (this.mustChange) {
+            this.showChangePass = true;
+          } else {
+            this.router.navigate(['user']);
+          }
         }
       })
     }
+  }
+  async prevalidatePassword(code: number) {
+    let response: boolean;
+    await this.userGeneralService.getUniqueLoginUser(code).then(rest => {
+      if (rest?.changepassnextenter === "YES") {
+        this.loginUserUpdate = rest;
+        response = true;
+      } else {
+        response = false;
+      }
+    });
+    return this.mustChange = response;
+  }
+  onPasschanged() {
+    this.formPassword.markAllAsTouched()
+    if (!this.formPassword.valid) {
+      this.messageService.add({ severity: 'error', detail: 'Formulario incompleto' });
+    } else {
+      console.log("Antes", this.loginUserUpdate);
+      this.loginUserUpdate.password = this.formPassword.controls.newpassword.value;
+      this.loginUserUpdate.changepassnextenter = 'NO';
+      console.log('On change');
+      console.log(this.loginUserUpdate);
+      this.userGeneralService.updateLoginUSer(this.loginUserUpdate).then(rest => {
+        if (rest) {
+          this.messageService.add({ severity: 'success', detail: 'Contraseña actualizada' });
+          this.showChangePass = false;
+          this.loginService.logOut();
+        } else {
+          this.messageService.add({ severity: 'error', detail: 'Error al actualizar' });
+        }
+      })
+    }
+
+
+
   }
 
   MustMatch(controlName: string, matchingControlName: string) {

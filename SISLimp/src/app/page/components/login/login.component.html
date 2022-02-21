@@ -93,6 +93,9 @@
                                     <small *ngIf="formNewUser.get('email').errors?.required">
                                         Requerido
                                     </small>
+                                    <small *ngIf="formNewUser.get('email').errors?.userNameFound">
+                                        Correo electrónico existente
+                                    </small>
                                 </small>
                             </div>
                             <div class="col-6">
@@ -100,12 +103,9 @@
                                     <span class="input-group-text ">
                                         <i class="fa fa-phone-square text-muted"></i>
                                     </span>
-                                    <select id="countryCode" name="countryCode" style="max-width: 60px;"
-                                        class="custom-select form-control">
-                                        <option value="">+593</option>
-                                    </select>
                                     <input id="phoneNumber" type="tel" name="phone" placeholder="Teléfono"
-                                        formControlName="phoneNumber"
+                                        maxlength="10" formControlName="phoneNumber"
+                                        (keypress)="sharedFuntions.enterOnlyNumbers($event)"
                                         class="form-control bg-white border-md border-left-0 pl-3">
                                 </div>
                                 <small *ngIf="formNewUser.get('phoneNumber')?.errors && (formNewUser.get('phoneNumber')?.dirty ||
@@ -115,16 +115,18 @@
                                     </small>
                                 </small>
                             </div>
-                            <div class="col-6">
-                                <div class="input-group mt-4">
+                            <div class="col-6 mt-2">
+                                <span>Provincia</span>
+                                <div class="input-group ">
                                     <span class="input-group-text ">
                                         <i class="fa fa-globe text-muted"></i>
                                     </span>
                                     <select id="provinica" name="nomprovi" formControlName="province"
+                                        (change)="onChangueProvince($event)"
                                         class="form-control custom-select bg-white border-left-0 border-md">
-                                        <option value="">Provincia</option>
+                                        <!-- <option value="">Provincia</option> -->
                                         <ng-container *ngFor="let item of provinces">
-                                            <option value="{{item.code}}">{{item.name}}</option>
+                                            <option value="{{item.value}}">{{item.label}}</option>
                                         </ng-container>
                                     </select>
                                 </div>
@@ -135,16 +137,17 @@
                                     </small>
                                 </small>
                             </div>
-                            <div class="col-6">
-                                <div class="input-group mt-4">
+                            <div class="col-6 mt-2">
+                                <span>Ciudad</span>
+                                <div class="input-group ">
                                     <span class="input-group-text ">
                                         <i class="fa fa-globe text-muted"></i>
                                     </span>
                                     <select id="ciudad" name="nomciudad" formControlName="city"
                                         class="form-control custom-select bg-white border-left-0 border-md">
-                                        <option value="">Ciudad</option>
+                                        <!-- <option value="">Ciudad</option> -->
                                         <ng-container *ngFor="let item of  cities">
-                                            <option value="{{item.code}}">{{item.name}}</option>
+                                            <option value="{{item.value}}">{{item.label}}</option>
                                         </ng-container>
                                     </select>
                                 </div>
@@ -232,6 +235,52 @@
             </div>
 
         </div>
-
     </div>
 </section>
+<p-dialog header="Cambiar contraseña" [(visible)]="showChangePass" modal="true">
+    <div class="row">
+        <form [formGroup]="formPassword" (ngSubmit)="onPasschanged()">
+            <div class="col-12">
+                <div class="input-group mt-4">
+                    <span class="input-group-text ">
+                        <i class="fa fa-lock text-muted"></i>
+                    </span>
+                    <input id="password" type="password" name="password" placeholder="Contraseña"
+                        formControlName="newpassword" class="form-control bg-white border-left-0 border-md">
+                </div>
+                <small *ngIf="formPassword.get('newpassword')?.errors && (formPassword.get('newpassword')?.dirty ||
+                formPassword.get('newpassword')?.touched)" class="p-error block">
+                    <small *ngIf="formPassword.get('newpassword').errors?.required">
+                        Requerido
+                    </small>
+                </small>
+            </div>
+            <div class="col-12">
+                <div class="input-group mt-4">
+                    <span class="input-group-text ">
+                        <i class="fa fa-lock text-muted"></i>
+                    </span>
+                    <input id="passwordConfirmation" type="password" name="passwordConfirmation"
+                        formControlName="repassword" placeholder="Repita contraseña"
+                        class="form-control bg-white border-left-0 border-md">
+                </div>
+                <small
+                    *ngIf="formPassword.controls.repassword.errors && formPassword.controls.repassword.touched"
+                    style='color:#ff7355'>
+                    <small *ngIf="formPassword.controls.repassword.errors?.required">
+                        Requerido
+                    </small>
+                    <small *ngIf="formPassword.controls.repassword.errors?.mustMatch">Las
+                        contraseñas
+                        deben coincidir</small>
+                </small>
+            </div>
+            <div class="col-12 mt-5">
+                <button type="button" class="btn btn-primary btn-block py-2"
+                    style="width: 100%; background-color: #1E65AE;" (click)="onPasschanged()">
+                    <span class="font-weight-bold">Guardar contraseña</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</p-dialog>

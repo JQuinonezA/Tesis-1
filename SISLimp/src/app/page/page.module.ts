@@ -17,6 +17,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {ToastModule} from 'primeng/toast';
 import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
+import {DynamicDialogModule} from 'primeng/dynamicdialog';
+import {DialogModule} from 'primeng/dialog';
 
 
 @NgModule({
@@ -40,6 +42,8 @@ import {MessageModule} from 'primeng/message';
     ToastModule,
     MessageModule,
     MessagesModule,
+    DialogModule,
+    DynamicDialogModule
   ]
 })
 export class PageModule { }

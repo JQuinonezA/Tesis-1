@@ -5,6 +5,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { UserGeneralModel, LoginUser } from '../../../sharedAll/models/usergeneral.model';
 import { MessageService, LazyLoadEvent, SelectItem } from 'primeng/api';
 import { CataloguesService } from '../../../sharedAll/serviceShared/catalogues.service';
+import { FuntionsSharedService } from '../../../sharedAll/serviceShared/funtions-shared.service';
 const CITYCAT = 'CITYCAT';
 const PROVINCECAT = 'PROVINCECAT';
 const GENERICT_PASSWORD = '123K45678K9';
@@ -37,7 +38,8 @@ export class UsersManagementComponent implements OnInit {
   ];
 
   clonedUSer: { [s: string]: UserGeneralModel; } = {};
-
+  initialValues: any;
+  loginUsers: LoginUser[] = [];
 
   constructor(
     private authService: AuthService,
@@ -45,10 +47,12 @@ export class UsersManagementComponent implements OnInit {
     private formBuilder: FormBuilder,
     private messageService: MessageService,
     private catalogueService: CataloguesService,
+    public sharedFuntions: FuntionsSharedService,
 
   ) {
     this.createForm();
     this.createCols();
+    this.getLoginUsers();
   }
 
   ngOnInit(): void {
@@ -63,7 +67,7 @@ export class UsersManagementComponent implements OnInit {
       { field: 'phone', header: 'Teléfono' },
       { field: 'province', header: 'Provincia' },
       { field: 'city', header: 'Ciudad' },
-      { field: 'date', header: 'Login code' },
+      { field: 'date', header: 'Usuario' },
       { field: '', header: 'Resetear contraseña' },
       { field: '', header: '' },
     ]
@@ -79,15 +83,16 @@ export class UsersManagementComponent implements OnInit {
       username: ['', Validators.required],
       rol: ['', Validators.required],
 
-    })
+    }, { validators: [this.sharedFuntions.emailValidator('email'),
+     this.sharedFuntions.validateUsername('username')], },
+    );
+    this.initialValues = this.formUser.value;
 
   }
   onSaveUser() {
-    console.log(this.formUser.value);
     this.formUser.markAllAsTouched();
     if (!this.formUser.valid) {
       this.messageService.add({ severity: 'error', detail: 'Formulario imcompleto' });
-      console.log('FORM', this.formUser.value);
     } else {
       this.fillContainerLoginUSer(this.formUser);
     }
@@ -102,16 +107,14 @@ export class UsersManagementComponent implements OnInit {
     this.newUSer.loginuser_codeuser = this.loginuser_codeuser;
     if (this.loginuser_codeuser != 0) {
       this.userService.saveUser(this.newUSer).then(rest => {
-        console.log("SAVED newUSer ?", rest);
         if (rest) {
           this.messageService.add({ severity: 'success', detail: 'Registrado correctamente' });
           this.getUsers(null);
-          this.formUser.reset();
+          this.formUser.reset(this.initialValues);
           this.loginuser_codeuser = 0;
           this.activeIndex1 = 0;
         } else {
           this.messageService.add({ severity: 'error', detail: 'Error al registrar' });
-
         }
       })
     }
@@ -124,7 +127,6 @@ export class UsersManagementComponent implements OnInit {
     this.loginUser.status = 'ACTIVO';
     this.loginUser.loginusercol = form.controls.rol.value;
     await this.userService.createLoginUSer(this.loginUser).then(rest => {
-      console.log("SAVED loginUser ?", rest);
       if (rest.codeuser != null && rest.codeuser != 0) this.loginuser_codeuser = rest.codeuser;
     });
     this.fillContainer(this.formUser);
@@ -137,10 +139,17 @@ export class UsersManagementComponent implements OnInit {
       } else {
         this.dataFromdb = rest;
         this.dataFromdb.forEach(async item => await this.completeCityDrop(item.province));
-        console.warn(this.dataFromdb);
       }
-
     });
+  }
+  getLoginUsers(){
+    this.userService.getLoginUsers(localStorage.getItem('role')).then(rest => {
+      if (rest.hasOwnProperty('message')) {
+        this.messageService.add({ severity: 'error', detail: rest.message });
+      } else {
+        this.loginUsers = rest;
+      }
+    })
   }
   async getCatalogues() {
     await this.catalogueService.getCataloguebyCodeCat(PROVINCECAT).then(rest => {
@@ -164,7 +173,6 @@ export class UsersManagementComponent implements OnInit {
   }
 
   onRowEditSave(user: UserGeneralModel) {
-    console.log(user)
     this.userService.saveUser(user).then(rest => {
       if (rest) {
         this.messageService.add({ severity: 'success', detail: 'Actualizado' });
@@ -180,12 +188,37 @@ export class UsersManagementComponent implements OnInit {
     this.dataFromdb[index] = this.clonedUSer[user.sequser];
     delete this.clonedUSer[user.sequser];
   }
-  deleteCustomerService(sequser: any) {
+  deleteUserGeneral(sequser: any, seqloginuser: any) {
     this.userService.deleteUSer(sequser).subscribe(rest => {
       if (rest) {
         this.messageService.add({ severity: 'success', detail: 'Registro eliminado' });
         this.getUsers(null);
+        this.deleteLoginUserAsosiated(seqloginuser)
+      } else{
+        this.messageService.add({ severity: 'error', detail: 'Error al eliminar' });
+
       }
     })
+  }
+  deleteLoginUserAsosiated(seqloginuser: any){
+    this.userService.deleteLoginUser(seqloginuser).subscribe(rest => {
+      if(rest){
+        this.messageService.add({ severity: 'success', detail: 'Usuario asosiado eliminado' });
+      } else 
+      this.messageService.add({ severity: 'error', detail: 'Error al eliminar' });
+    });
+  }
+  resetPassword(data: UserGeneralModel){
+    const loginUserToUpdate = this.loginUsers.find(item => item.codeuser === Number(data.loginuser_codeuser));
+    loginUserToUpdate.password = GENERICT_PASSWORD;
+    loginUserToUpdate.changepassnextenter = 'YES';
+    this.userService.updateLoginUSer(loginUserToUpdate).then(rest => {
+      if(rest){
+        this.messageService.add({ severity: 'success', detail: 'Contraseña reestablecida' });
+      } else {
+        this.messageService.add({ severity: 'error', detail: 'Error al reestrablecer' });
+      }
+    });
+
   }
 }

@@ -32,7 +32,6 @@ export class AccountDetailComponent implements OnInit {
     this.createForm();
     this.onEdit();
   }
-
   ngOnInit(): void {
     this.chargeData();
     this.getCatalogues();
@@ -40,6 +39,7 @@ export class AccountDetailComponent implements OnInit {
   chargeData() {
     this.userService.getUserExtraData(this.authService.codeUser).then(rest => {
       if (rest) {
+        console.log(rest);
         this.dataUser = rest;
         this.createForm();
       }
@@ -57,8 +57,6 @@ export class AccountDetailComponent implements OnInit {
     })
   }
   createForm() {
-    console.log("AKI?", this.dataUser);
-
     this.formUser = this.formBuilder.group({
       nameuser: [this.dataUser.name, Validators.required],
       lastname: [this.dataUser.lastname, Validators.required],
@@ -71,17 +69,12 @@ export class AccountDetailComponent implements OnInit {
     }, { validator: this.MustMatch("password", "confirmpassword") });
   }
   MustMatch(controlName: string, matchingControlName: string) {
-
     return (formGroup: FormGroup) => {
       const control = formGroup.controls[controlName];
       const matchingControl = formGroup.controls[matchingControlName];
-
       if (matchingControl.errors && !matchingControl.errors.mustMatch) {
-        // return if another validator has already found an error on the matchingControl
         return;
       }
-
-      // set error on matchingControl if validation fails
       if (control.value !== matchingControl.value) {
         matchingControl.setErrors({ mustMatch: true });
       } else {
@@ -97,11 +90,8 @@ export class AccountDetailComponent implements OnInit {
     if (this.formUser.controls.password.valid) this.loginUser.password = this.formUser.controls.password.value;
     if (this.formUser.controls.province.valid) this.dataUser.province = this.formUser.controls.province.value;
     if (this.formUser.controls.city.valid) this.dataUser.city = this.formUser.controls.city.value;
-    console.log("PROVINCE", this.formUser.controls.province.valid);
-    console.log(this.dataUser);
     if (this.loginUser.password != null && this.loginUser.password != '') {
       this.userService.updateLoginUSer(this.loginUser).then(rest => {
-        console.log("SAVED LOGIN USER?", rest)
         if (rest != null) this.messageService.add({ severity: 'success', detail: 'Actualizado correctamente' });
       });
     }
@@ -111,7 +101,6 @@ export class AccountDetailComponent implements OnInit {
     });
   }
   onUpdate() {
-    console.log("FORM", this.formUser.value);
     this.fillConatainer();
   }
   onEdit() {

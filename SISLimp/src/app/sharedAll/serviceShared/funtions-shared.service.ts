@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { UsersGeneralService } from '../../page/components/login/users-general.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FuntionsSharedService {
 
-  constructor() { }
+  constructor(
+    private loginUserService: UsersGeneralService
+  ) { }
   repair(imgs: any) {
     let TYPED_ARRAY: Uint8Array;
     if (imgs != null || imgs != undefined) TYPED_ARRAY = new Uint8Array(imgs?.data);
@@ -41,6 +44,21 @@ export class FuntionsSharedService {
       } else {
         control.setErrors({ mustMatch: 'Correo incorrecto' });
       }
+    }
+  }
+  validateUsername(userNameControl: string){
+    return (form: FormGroup) => {
+      const control = form.controls[userNameControl];
+      if (control.errors && !control.errors.userNameFound) {
+        return;
+      }
+      this.loginUserService.validateUsername(control?.value).then( rest => {
+        if(rest.code !== '01'){
+          control.setErrors(null);
+        } else {
+          control.setErrors({userNameFound: 'El usuario existe'})
+        }
+      })
     }
   }
   

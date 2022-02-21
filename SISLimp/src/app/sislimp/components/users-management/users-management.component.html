@@ -98,17 +98,17 @@
                             </p-cellEditor>
                         </td>
                         <td>
-                            {{dataFrom.loginuser_codeuser}}
+                            {{dataFrom.loginuser_codeuser | loginUserPipe:loginUsers}}
                         </td>
                         <td style="text-align: center;">
-                            <button *ngIf="!editing" pButton pRipple type="button" icon="pi pi-refresh"
+                            <button *ngIf="!editing" pButton pRipple type="button" icon="pi pi-refresh" (click)="resetPassword(dataFrom)"
                                 class="p-button-rounded p-button-text p-button-success"></button>
                         </td>
                         <td style="text-align:center" NOWRAP>
                             <button *ngIf="!editing" (click)="onRowEditInit(dataFrom)" pButton pRipple type="button"
                                 pInitEditableRow icon="pi pi-pencil" class="p-button-rounded p-button-text"></button>
                             <button *ngIf="!editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-trash"
-                                (click)="deleteCustomerService(dataFrom.sequser)"
+                                (click)="deleteUserGeneral(dataFrom.sequser, dataFrom.loginuser_codeuser)"
                                 class="p-button-rounded p-button-text p-button-danger"></button>
 
                             <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check"
@@ -140,6 +140,9 @@
                             formUser.get('username')?.touched)" class="p-error block">
                             <small *ngIf="formUser.get('username').errors?.required">
                                 Requerido
+                            </small>
+                            <small *ngIf="formUser.get('username').errors?.userNameFound">
+                                {{formUser.get('username').errors?.userNameFound}}
                             </small>
                         </small>
                     </div>
@@ -202,6 +205,9 @@
                             <small *ngIf="formUser.get('email').errors?.required">
                                 Requerido
                             </small>
+                            <small *ngIf="formUser.get('email').errors?.mustMatch">
+                                {{formUser.get('email').errors?.mustMatch}}
+                            </small> 
                         </small>
                     </div>
                     <div class="p-field p-col-12 p-md-6">
@@ -210,7 +216,8 @@
                                 <i class="pi pi-user"></i>
                             </span>
                             <span class="p-float-label">
-                                <input type="text" id="inputgroup" pInputText formControlName="phoneNumber">
+                                <input type="text" id="inputgroup" pInputText formControlName="phoneNumber"
+                                    maxlength="10" (keypress)="sharedFuntions.enterOnlyNumbers($event)">
                                 <label for="inputgroup">Teléfono</label>
                             </span>
                         </div>
